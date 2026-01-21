@@ -28,7 +28,7 @@ export const SocketProvider = ({ children }) => {
 
     setSocketLoading(true);
 
-    const socket = io(`10.10.20.26:8080/messages`, {
+    const socket = io(`https://backend.barberstime.com/messages`, {
       auth: { token },
       autoConnect: true,
       transports: ["websocket"],
