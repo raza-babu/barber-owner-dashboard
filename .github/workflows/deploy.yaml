@@ -1,0 +1,76 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Install Node Js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.18.0
+      - name: Install Dependencies
+        run: npm install --frozen-lockfile
+      - name: Build App
+        run: npm run build  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Install Node Js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.18.0
+      - name: Install Dependencies
+        run: npm install --frozen-lockfile
+      - name: Build App
+        run: npm run build  
+      - name: Configure SSH
+        env: 
+         SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+         EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+         mkdir -p ~/.ssh
+         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+         chmod 600 ~/.ssh/id_rsa
+         touch ~/.ssh/known_hosts
+         ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        env: 
+         EC2_HOST: ${{ secrets.EC2_HOST }}
+         EC2_USER: ${{ secrets.EC2_USER }}
+         ENV_FILE: ${{ secrets.ENV_FILE }}
+        run: |
+          # Create Deployment Directory
+          ssh $EC2_USER@$EC2_HOST "mkdir -p ~/applications/rebarber_dashboard"
+
+          # Copy Files to EC2 instances
+          rsync -avz \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.github' \
+            . $EC2_USER@$EC2_HOST:~/applications/rebarber_dashboard/
+          
+          # ✅ Create .env file on EC2 from the single GitHub secret
+          ssh $EC2_USER@$EC2_HOST "echo \"$ENV_FILE\" > ~/applications/rebarber_dashboard/.env"
+          
+          # install production dependencies on EC2
+          ssh $EC2_USER@$EC2_HOST "export NVM_DIR=\$HOME/.nvm && [ -s \$NVM_DIR/nvm.sh ] && . \$NVM_DIR/nvm.sh && cd ~/applications/rebarber_dashboard && npm install --frozen-lockfile"
+      
+          #Stop existing PM2 process if it exists
+          ssh $EC2_USER@$EC2_HOST "export NVM_DIR=\$HOME/.nvm && [ -s \$NVM_DIR/nvm.sh ] && . \$NVM_DIR/nvm.sh && cd ~/applications/rebarber_dashboard && pm2 delete rebarber_dashboard || true"
+
+          # Start the application with PM2
+          ssh $EC2_USER@$EC2_HOST "export NVM_DIR=\$HOME/.nvm && [ -s \$NVM_DIR/nvm.sh ] && . \$NVM_DIR/nvm.sh && cd ~/applications/rebarber_dashboard && pm2 serve dist 5174 --name rebarber_dashboard --spa"
+
+  
