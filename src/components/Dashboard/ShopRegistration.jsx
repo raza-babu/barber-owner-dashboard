@@ -1,154 +1,178 @@
-import React, { useState } from "react";
-import { Table, Button, message, Popconfirm } from "antd";
-import { Link } from "react-router-dom";
-import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
-import { BiMessageRoundedDots } from "react-icons/bi";
-import { RxCrossCircled } from "react-icons/rx";
 import {
-  useGetAllCustomerDashboardQuery,
-  useUpdateStatusOwnerMutation,
-} from "../../page/redux/api/manageApi";
+  Table,
+  Input,
+  Pagination,
+  Select,
+  DatePicker,
+  message,
+  Modal,
+  Button,
+  Descriptions,
+  List,
+  Avatar,
+  Divider,
+} from "antd";
+import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
+import { Navigate } from "../../Navigate";
+import { useState } from "react";
+import dayjs from "dayjs";
+
+import { Link } from "react-router-dom";
+import { BiMessageRoundedDots } from "react-icons/bi";
+import { useGetAllCustomerOwnerQuery, useUpdateStatusCustomerMutation } from "../../page/redux/api/manageApi";
+const STATUS_OPTIONS = [
+  { value: "PENDING", label: "Pending" },
+  { value: "CONFIRMED", label: "Confirmed" },
+  { value: "CANCELLED", label: "Cancelled" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "RESCHEDULED", label: "Rescheduled" },
+];
 
 const ShopRegistration = () => {
-  const { data: bookingData, isLoading } = useGetAllCustomerDashboardQuery();
-  const [updateStatusOwner] = useUpdateStatusOwnerMutation();
+  const today = dayjs().format("YYYY-MM-DD");
+  const [searchTerm, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [updateStatus] = useUpdateStatusCustomerMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
-  const dataSource =
-    bookingData?.data?.slice(0,5)?.map((booking, index) => ({
-      key: index + 1,
-      id: booking.bookingId,
-      customerId: booking.customerId,
-      customerName: booking.customerName,
-      customerImage: booking.customerImage ||  "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
-      email: booking.customerEmail,
-      phone: booking.customerPhone || "N/A",
-      date: new Date(booking.bookingDate).toLocaleDateString(),
-      time: `${booking.startTime} - ${booking.endTime}`,
-      service: booking.services
-        .map((s) => s.serviceName)
-        .join(", "), // ✅ Corrected
-      barber: booking.barberName,
-      status: booking.status,
-    })) || [];
-
-  const handleRemove = async (id) => {
-    try {
-      const res = await updateStatusOwner({
-        bookingId: id,
-        status: "CANCELLED",
-      }).unwrap();
-      message.success(res?.message);
-    } catch (err) {
-      message.error(err?.data?.message || "Something went wrong");
-    }
+  const openModal = (record) => {
+    setSelectedBooking(record);
+    setIsModalOpen(true);
   };
 
-  const handleAccept = async (id) => {
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedBooking(null);
+  };
+
+  const [activeTab, setActiveTab] = useState("BOOKING");
+  const [status, setStatus] = useState(null);
+  const [date, setDate] = useState(null);
+
+  const pageSize = 10;
+
+  // ✅ API QUERY PARAMS
+  const { data: customerData } = useGetAllCustomerOwnerQuery({
+  
+ 
+    type: activeTab !== "ALL" ? activeTab : undefined,
+    status: status || undefined,
+    date: activeTab === "QUEUE" ? date : undefined,
+  });
+  console.log(customerData);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+  const handleStatusChange = async (bookingId, status) => {
     try {
-      const res = await updateStatusOwner({
-        bookingId: id,
-        status: "CONFIRMED",
+      const res = await updateStatus({
+        bookingId,
+        status,
       }).unwrap();
       message.success(res?.message);
-    } catch (err) {
-      message.error(err?.data?.message || "Something went wrong");
+    } catch (error) {
+      message.error(error?.data?.message);
+      console.error("Status update failed", error);
     }
   };
 
   const columns = [
     {
-      title: "#",
-      dataIndex: "key",
-      key: "key",
+      title: "SI No",
+      key: "siNo",
+      render: (_, __, index) => index + 1,
     },
+
     {
       title: "Customer Name",
       dataIndex: "customerName",
       key: "customerName",
       render: (text, record) => (
-        <div className="flex items-center space-x-2">
-          {record.customerImage && (
-            <img
-              src={record.customerImage || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
-
- 
-
-
-              alt={text}
-              className="w-8 h-8 rounded-full"
-            />
-          )}
+        <div className="flex items-center gap-2">
+          <img
+            src={
+              record.customerImage ||
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+            }
+            alt="avatar"
+            className="w-8 h-8 rounded-full"
+          />
           <span>{text}</span>
         </div>
       ),
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Barber Name",
+      dataIndex: "barberName",
+      key: "barberName",
+      render: (text, record) => (
+        <div className="flex items-center gap-2">
+          <img
+            src={
+              record.barberImage ||
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+            }
+            alt="barber"
+            className="w-8 h-8 rounded-full"
+          />
+          <span>{text}</span>
+        </div>
+      ),
     },
+
     {
-      title: "Phone",
-      dataIndex: "phone",
-      key: "phone",
-    },
-    {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
+      title: "Booking Date",
+      dataIndex: "bookingDate",
+      key: "bookingDate",
+      render: (date) => new Date(date).toLocaleDateString(),
     },
     {
       title: "Time",
-      dataIndex: "time",
-      key: "time",
+      render: (_, record) => `${record.startTime} - ${record.endTime}`,
     },
     {
-      title: "Service Booked",
-      dataIndex: "service",
-      key: "service",
+      title: "Total Price",
+      dataIndex: "totalPrice",
+      render: (price) => `$${price}`,
     },
     {
-      title: "Assigned Barber",
-      dataIndex: "barber",
-      key: "barber",
-    },
-    {
-      title: "Booking Status",
+      title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (status, record) => (
+        <Select
+          value={status}
+          style={{ width: 150 }}
+          options={STATUS_OPTIONS}
+          onChange={(value) => handleStatusChange(record.bookingId, value)}
+        />
+      ),
     },
     {
       title: "Action",
       key: "action",
+      align: "center",
       render: (_, record) => (
-        <div className="flex gap-2 text-xl">
-            <Popconfirm
-            title="Are you sure to confirm this booking?"
-            okText="Yes"
-            cancelText="No"
-            onConfirm={() => handleAccept(record?.id)}
-          >
-          <TbRosetteDiscountCheckFilled
-         
-            className="text-green-500 cursor-pointer"
-          /></Popconfirm>
-          <Link to={`/dashboard/bookingHistory/chat/${record?.customerId}`}>
-            <BiMessageRoundedDots className="text-[#AB684D] cursor-pointer" />
-          </Link>
-            <Popconfirm
-            title="Are you sure to Cancel this booking?"
-            okText="Yes"
-            cancelText="No"
-            onConfirm={() => handleRemove(record?.id)}
-          >
-          <RxCrossCircled
-            
-            className="text-[#AB684D] cursor-pointer"
-          /></Popconfirm>
+        <div className="flex items-center gap-3 justify-center">
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<EyeOutlined />}
+            onClick={() => openModal(record)}
+          />
+
+          {record?.isRegistered === true && (
+            <Link to={`/dashboard/bookingHistory/chat/${record?.customerId}`}>
+              <BiMessageRoundedDots className="text-[#AB684D] text-xl cursor-pointer" />
+            </Link>
+          )}
         </div>
       ),
     },
   ];
+
+  const tableData = customerData?.data.slice(1,5) || [];
 
   return (
     <div className="p-3 bg-white mt-4">
@@ -158,14 +182,160 @@ const ShopRegistration = () => {
           <button className="text-[#AB684D]">View all</button>
         </Link>
       </div>
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        pagination={false}
-        scroll={{ x: 800 }}
-        loading={isLoading}
-       
-      />
+      <div className="md:flex justify-between items-center">
+      <div className="flex gap-4 mt-4">
+        {["BOOKING", "QUEUE"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => {
+              setActiveTab(tab);
+              setStatus(null);
+
+              if (tab === "QUEUE") {
+                setDate(today);
+              } else {
+                setDate(null);
+              }
+            }}
+            className={`px-4 py-2 rounded ${
+              activeTab === tab ? "bg-[#D17C51] text-white" : "bg-gray-200"
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+        {/* FILTERS */}
+        <div className="flex gap-4 items-center">
+          {activeTab === "QUEUE" && (
+            <DatePicker
+              value={date ? dayjs(date) : null}
+              onChange={(value) =>
+                setDate(value ? dayjs(value).format("YYYY-MM-DD") : null)
+              }
+            />
+          )}
+
+          {/* Status Select */}
+          <Select
+            value={status}
+            onChange={(value) => setStatus(value || null)}
+            allowClear
+            placeholder="Status"
+            style={{ width: 150, height: "42px" }}
+            options={[
+              { value: "PENDING", label: "Pending" },
+              { value: "STARTED", label: "Started" },
+              { value: "CONFIRMED", label: "Confirmed" },
+              { value: "ENDED", label: "Ended" },
+            ]}
+          />
+
+     
+        </div>
+      </div>
+
+      {/* TABS */}
+     
+
+      {/* TABLE */}
+      <div className="mt-4 rounded-md overflow-hidden">
+        <Table
+          columns={columns}
+          dataSource={tableData}
+          rowKey="bookingId"
+          pagination={false}
+          rowClassName="border-b border-gray-300"
+          scroll={{ x: 800 }}
+        />
+      </div>
+
+
+
+      <Modal
+        title="Booking Details"
+        open={isModalOpen}
+        onCancel={closeModal}
+        footer={null}
+        width={700}
+      >
+        {selectedBooking && (
+          <>
+            {/* CUSTOMER & BARBER */}
+            <div className="flex justify-between gap-6">
+              <div className="flex items-center gap-3">
+                <Avatar size={64} src={selectedBooking.customerImage} />
+                <div>
+                  <p className="font-semibold">
+                    {selectedBooking.customerName}
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    {selectedBooking.customerEmail}
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    {selectedBooking.customerPhone}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Avatar size={64} src={selectedBooking.barberImage} />
+                <div>
+                  <p className="font-semibold">{selectedBooking.barberName}</p>
+                  <p className="text-gray-500 text-sm">Barber</p>
+                </div>
+              </div>
+            </div>
+
+            <Divider />
+
+            {/* BOOKING INFO */}
+            <Descriptions bordered size="small" column={2}>
+              <Descriptions.Item label="Booking Date">
+                {new Date(selectedBooking.bookingDate).toLocaleDateString()}
+              </Descriptions.Item>
+
+              <Descriptions.Item label="Time">
+                {selectedBooking.startTime} - {selectedBooking.endTime}
+              </Descriptions.Item>
+
+              <Descriptions.Item label="Booking Type">
+                {selectedBooking.bookingType}
+              </Descriptions.Item>
+
+              <Descriptions.Item label="Status">
+                {selectedBooking.status}
+              </Descriptions.Item>
+
+              <Descriptions.Item label="Total Price" span={2}>
+                ${selectedBooking.totalPrice}
+              </Descriptions.Item>
+            </Descriptions>
+
+            <Divider />
+
+            {/* SERVICES LIST */}
+            <h3 className="font-semibold mb-2">Services</h3>
+            <List
+              bordered
+              dataSource={selectedBooking.services}
+              renderItem={(service) => (
+                <List.Item>
+                  <div className="flex justify-between w-full">
+                    <div>
+                      <p className="font-medium">{service.serviceName}</p>
+                      <p className="text-sm text-gray-500">
+                        Available To: {service.availableTo}
+                      </p>
+                    </div>
+                    <p className="font-semibold">{service.price}</p>
+                  </div>
+                </List.Item>
+              )}
+            />
+          </>
+        )}
+      </Modal>
     </div>
   );
 };

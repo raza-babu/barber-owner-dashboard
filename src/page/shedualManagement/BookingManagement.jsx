@@ -47,16 +47,7 @@ const BookingManagement = () => {
         </span>
       ),
     },
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   render: () => (
-    //     <div className="flex gap-2 text-xl">
-    //       <EditOutlined className="text-[#AB684D]" />
-    //       <RxCrossCircled className="text-[#AB684D]" />
-    //     </div>
-    //   ),
-    // },
+
   ];
 
   return (
@@ -65,43 +56,11 @@ const BookingManagement = () => {
         <Navigate title={"Schedule Management"} />
       </div>
 
-      <div className="flex gap-4 items-center mb-4">
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <button
-            className="flex gap-2 items-center border text-[#9C5F46] border-[#D17C51] p-1 px-3 rounded"
-            onClick={(e) => e.preventDefault()}
-          >
-            Week <IoIosArrowDown />
-          </button>
-        </Dropdown>
-
-        <div
-          onClick={() => setSelectedTab("personal")}
-          className={`py-2 px-5 border rounded border-[#D17C51] cursor-pointer ${
-            selectedTab === "personal" ? "bg-[#D17C51] text-white" : ""
-          }`}
-        >
-          Schedule
-        </div>
-{/* 
-        <div
-          onClick={() => setSelectedTab("photo")}
-          className={`py-2 px-5 border rounded border-[#D17C51] cursor-pointer ${
-            selectedTab === "photo" ? "bg-[#D17C51] text-white" : ""
-          }`}
-        >
-          Manage
-        </div> */}
-      </div>
+   
 
       {selectedTab === "personal" && (
         <div>
-          <button
-            className="bg-[#D17C51] px-5 py-2 text-white rounded mb-4"
-            onClick={() => setOpenAddModal(true)}
-          >
-            + New Booking
-          </button>
+         
           <Table
             dataSource={dataSource}
             columns={columns}

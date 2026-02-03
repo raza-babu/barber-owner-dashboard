@@ -1,5 +1,18 @@
-import { Table, Input, Pagination, Select, DatePicker, message,  Modal, Button, Descriptions, List, Avatar, Divider } from "antd";
-import { SearchOutlined,EyeOutlined  } from "@ant-design/icons";
+import {
+  Table,
+  Input,
+  Pagination,
+  Select,
+  DatePicker,
+  message,
+  Modal,
+  Button,
+  Descriptions,
+  List,
+  Avatar,
+  Divider,
+} from "antd";
+import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
 import { Navigate } from "../../Navigate";
 import { useState } from "react";
 import dayjs from "dayjs";
@@ -7,6 +20,8 @@ import {
   useGetAllCustomerOwnerQuery,
   useUpdateStatusCustomerMutation,
 } from "../redux/api/manageApi";
+import { Link } from "react-router-dom";
+import { BiMessageRoundedDots } from "react-icons/bi";
 const STATUS_OPTIONS = [
   { value: "PENDING", label: "Pending" },
   { value: "CONFIRMED", label: "Confirmed" },
@@ -16,23 +31,23 @@ const STATUS_OPTIONS = [
 ];
 
 const Customer = () => {
+  const today = dayjs().format("YYYY-MM-DD");
   const [searchTerm, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [updateStatus] = useUpdateStatusCustomerMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-const [selectedBooking, setSelectedBooking] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
-const openModal = (record) => {
-  setSelectedBooking(record);
-  setIsModalOpen(true);
-};
+  const openModal = (record) => {
+    setSelectedBooking(record);
+    setIsModalOpen(true);
+  };
 
-const closeModal = () => {
-  setIsModalOpen(false);
-  setSelectedBooking(null);
-};
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedBooking(null);
+  };
 
-  // ✅ NEW STATES
   const [activeTab, setActiveTab] = useState("BOOKING");
   const [status, setStatus] = useState(null);
   const [date, setDate] = useState(null);
@@ -48,7 +63,7 @@ const closeModal = () => {
     status: status || undefined,
     date: activeTab === "QUEUE" ? date : undefined,
   });
-
+  console.log(customerData);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -138,19 +153,26 @@ const closeModal = () => {
       ),
     },
     {
-  title: "Action",
-  key: "action",
-  align: "center",
-  render: (_, record) => (
-    <Button
-      type="primary"
-      shape="circle"
-      icon={<EyeOutlined />}
-      onClick={() => openModal(record)}
-    />
-  ),
-},
+      title: "Action",
+      key: "action",
+      align: "center",
+      render: (_, record) => (
+        <div className="flex items-center gap-3 justify-center">
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<EyeOutlined />}
+            onClick={() => openModal(record)}
+          />
 
+          {record?.isRegistered === true && (
+            <Link to={`/dashboard/bookingHistory/chat/${record?.customerId}`}>
+              <BiMessageRoundedDots className="text-[#AB684D] text-xl cursor-pointer" />
+            </Link>
+          )}
+        </div>
+      ),
+    },
   ];
 
   const tableData = customerData?.data || [];
@@ -167,6 +189,7 @@ const closeModal = () => {
         <div className="flex gap-4 items-center">
           {activeTab === "QUEUE" && (
             <DatePicker
+              value={date ? dayjs(date) : null}
               onChange={(value) =>
                 setDate(value ? dayjs(value).format("YYYY-MM-DD") : null)
               }
@@ -192,22 +215,26 @@ const closeModal = () => {
           <Input
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
-            
             prefix={<SearchOutlined />}
-               style={{ width: 150, height: "42px" }}
+            style={{ width: 150, height: "42px" }}
           />
         </div>
       </div>
 
       {/* TABS */}
       <div className="flex gap-4 mt-4">
-        {[ "BOOKING", "QUEUE"].map((tab) => (
+        {["BOOKING", "QUEUE"].map((tab) => (
           <button
             key={tab}
             onClick={() => {
               setActiveTab(tab);
               setStatus(null);
-              setDate(null);
+
+              if (tab === "QUEUE") {
+                setDate(today);
+              } else {
+                setDate(null);
+              }
             }}
             className={`px-4 py-2 rounded ${
               activeTab === tab ? "bg-[#D17C51] text-white" : "bg-gray-200"
@@ -242,88 +269,89 @@ const closeModal = () => {
       </div>
 
       <Modal
-  title="Booking Details"
-  open={isModalOpen}
-  onCancel={closeModal}
-  footer={null}
-  width={700}
->
-  {selectedBooking && (
-    <>
-      {/* CUSTOMER & BARBER */}
-      <div className="flex justify-between gap-6">
-        <div className="flex items-center gap-3">
-          <Avatar size={64} src={selectedBooking.customerImage} />
-          <div>
-            <p className="font-semibold">{selectedBooking.customerName}</p>
-            <p className="text-gray-500 text-sm">
-              {selectedBooking.customerEmail}
-            </p>
-            <p className="text-gray-500 text-sm">
-              {selectedBooking.customerPhone}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Avatar size={64} src={selectedBooking.barberImage} />
-          <div>
-            <p className="font-semibold">{selectedBooking.barberName}</p>
-            <p className="text-gray-500 text-sm">Barber</p>
-          </div>
-        </div>
-      </div>
-
-      <Divider />
-
-      {/* BOOKING INFO */}
-      <Descriptions bordered size="small" column={2}>
-        <Descriptions.Item label="Booking Date">
-          {new Date(selectedBooking.bookingDate).toLocaleDateString()}
-        </Descriptions.Item>
-
-        <Descriptions.Item label="Time">
-          {selectedBooking.startTime} - {selectedBooking.endTime}
-        </Descriptions.Item>
-
-        <Descriptions.Item label="Booking Type">
-          {selectedBooking.bookingType}
-        </Descriptions.Item>
-
-        <Descriptions.Item label="Status">
-          {selectedBooking.status}
-        </Descriptions.Item>
-
-        <Descriptions.Item label="Total Price" span={2}>
-          ${selectedBooking.totalPrice}
-        </Descriptions.Item>
-      </Descriptions>
-
-      <Divider />
-
-      {/* SERVICES LIST */}
-      <h3 className="font-semibold mb-2">Services</h3>
-      <List
-        bordered
-        dataSource={selectedBooking.services}
-        renderItem={(service) => (
-          <List.Item>
-            <div className="flex justify-between w-full">
-              <div>
-                <p className="font-medium">{service.serviceName}</p>
-                <p className="text-sm text-gray-500">
-                  Available To: {service.availableTo}
-                </p>
+        title="Booking Details"
+        open={isModalOpen}
+        onCancel={closeModal}
+        footer={null}
+        width={700}
+      >
+        {selectedBooking && (
+          <>
+            {/* CUSTOMER & BARBER */}
+            <div className="flex justify-between gap-6">
+              <div className="flex items-center gap-3">
+                <Avatar size={64} src={selectedBooking.customerImage} />
+                <div>
+                  <p className="font-semibold">
+                    {selectedBooking.customerName}
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    {selectedBooking.customerEmail}
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    {selectedBooking.customerPhone}
+                  </p>
+                </div>
               </div>
-              <p className="font-semibold">{service.price}</p>
-            </div>
-          </List.Item>
-        )}
-      />
-    </>
-  )}
-</Modal>
 
+              <div className="flex items-center gap-3">
+                <Avatar size={64} src={selectedBooking.barberImage} />
+                <div>
+                  <p className="font-semibold">{selectedBooking.barberName}</p>
+                  <p className="text-gray-500 text-sm">Barber</p>
+                </div>
+              </div>
+            </div>
+
+            <Divider />
+
+            {/* BOOKING INFO */}
+            <Descriptions bordered size="small" column={2}>
+              <Descriptions.Item label="Booking Date">
+                {new Date(selectedBooking.bookingDate).toLocaleDateString()}
+              </Descriptions.Item>
+
+              <Descriptions.Item label="Time">
+                {selectedBooking.startTime} - {selectedBooking.endTime}
+              </Descriptions.Item>
+
+              <Descriptions.Item label="Booking Type">
+                {selectedBooking.bookingType}
+              </Descriptions.Item>
+
+              <Descriptions.Item label="Status">
+                {selectedBooking.status}
+              </Descriptions.Item>
+
+              <Descriptions.Item label="Total Price" span={2}>
+                ${selectedBooking.totalPrice}
+              </Descriptions.Item>
+            </Descriptions>
+
+            <Divider />
+
+            {/* SERVICES LIST */}
+            <h3 className="font-semibold mb-2">Services</h3>
+            <List
+              bordered
+              dataSource={selectedBooking.services}
+              renderItem={(service) => (
+                <List.Item>
+                  <div className="flex justify-between w-full">
+                    <div>
+                      <p className="font-medium">{service.serviceName}</p>
+                      <p className="text-sm text-gray-500">
+                        Available To: {service.availableTo}
+                      </p>
+                    </div>
+                    <p className="font-semibold">{service.price}</p>
+                  </div>
+                </List.Item>
+              )}
+            />
+          </>
+        )}
+      </Modal>
     </div>
   );
 };

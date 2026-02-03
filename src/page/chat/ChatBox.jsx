@@ -13,11 +13,15 @@ const ChatBox = () => {
   const authId = profileData?.data?.id;
 
   const [messages, setMessages] = useState([]);
-  const [receiver, setReceiver] = useState(null); // ✅ store receiver info
+  const [receiver, setReceiver] = useState(null);
   const [input, setInput] = useState("");
   const scrollRef = useRef();
 
-  // Debug socket connection
+  // ✅ Clear input when receiverId changes
+  useEffect(() => {
+    setInput("");
+  }, [receiverId]);
+
   useEffect(() => {
     if (!socket) return;
     socket.on("connect", () => console.log("Socket connected"));
@@ -65,29 +69,26 @@ const ChatBox = () => {
     return () => socket.off("chats", handleChats);
   }, [socket]);
 
+  useEffect(() => {
+    if (!socket || !authId || !receiverId) return;
 
- useEffect(() => {
-  if (!socket || !authId || !receiverId) return;
+    const handleMessage = (msg) => {
+      const isForCurrentChat =
+        (msg.senderId === authId && msg.receiverId === receiverId) ||
+        (msg.senderId === receiverId && msg.receiverId === authId);
 
-  const handleMessage = (msg) => {
-   
-    const isForCurrentChat =
-      (msg.senderId === authId && msg.receiverId === receiverId) ||
-      (msg.senderId === receiverId && msg.receiverId === authId);
+      if (!isForCurrentChat) return;
 
-    if (!isForCurrentChat) return; 
+      setMessages((prev) => {
+        const exists = prev.some((m) => m.id === msg.id);
+        if (exists) return prev;
+        return [...prev, { ...msg, fromSelf: msg.senderId === authId }];
+      });
+    };
 
-    setMessages((prev) => {
-      const exists = prev.some((m) => m.id === msg.id);
-      if (exists) return prev;
-      return [...prev, { ...msg, fromSelf: msg.senderId === authId }];
-    });
-  };
-
-  socket.on("message", handleMessage);
-  return () => socket.off("message", handleMessage);
-}, [socket, authId, receiverId]);
-
+    socket.on("message", handleMessage);
+    return () => socket.off("message", handleMessage);
+  }, [socket, authId, receiverId]);
 
   const sendMessage = () => {
     if (!input.trim() || !authId) return;
@@ -153,7 +154,7 @@ const ChatBox = () => {
                   }`}
                 >
                   {!isSelf && (
-                    <div className="h-8 w-8 rounded-full overflow-hidden mt-1">
+                    <div className="h-8 w-8 rounded-full overflow-hidden mt-1 flex-shrink-0">
                       <img
                         src={
                           receiver?.image ||
@@ -165,13 +166,13 @@ const ChatBox = () => {
                     </div>
                   )}
                   <div
-                    className={`p-3 rounded-lg max-w-[70%] ${
+                    className={`p-3 rounded-lg max-w-[600px] break-words ${
                       isSelf
                         ? "bg-[#AB684D] text-white rounded-br-none"
                         : "bg-gray-100 text-black rounded-bl-none"
                     }`}
                   >
-                    <p>{msg.message}</p>
+                    <p className="break-words whitespace-pre-wrap overflow-wrap-anywhere">{msg.message}</p>
                   </div>
                 </div>
               );
@@ -181,9 +182,7 @@ const ChatBox = () => {
 
           {/* Input */}
           <div className="p-4 border-t flex items-center gap-2">
-            <button className="p-2 rounded-full hover:bg-gray-100">
-              
-            </button>
+            <button className="p-2 rounded-full hover:bg-gray-100"></button>
             <input
               className="bg-gray-100 border-0 flex-1 py-2 px-4 rounded-md"
               placeholder="Aa"

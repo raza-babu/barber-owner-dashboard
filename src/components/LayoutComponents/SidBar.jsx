@@ -1,4 +1,4 @@
-import logo from "../../assets/logo.png";
+import logo from "../../assets/header/logo3.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronRight, FaUserAstronaut, FaUserTie } from "react-icons/fa";
@@ -130,9 +130,8 @@ const SidBar = () => {
 
   useEffect(() => {
     const currentPath = location.pathname;
-
     let activeParent = null;
-
+    
     items.forEach((item) => {
       if (item.link === currentPath) {
         activeParent = item;

@@ -19,6 +19,7 @@ import { MdOutlineReport, MdOutlineSettings } from "react-icons/md";
 import { RiBookletLine } from "react-icons/ri";
 import { LiaUserTieSolid } from "react-icons/lia";
 import { CiCoinInsert } from "react-icons/ci";
+import { useGetProfileQuery } from "../../page/redux/api/manageApi";
 
 
 const items = [
@@ -131,7 +132,7 @@ const Header = () => {
   const [selectedKey, setSelectedKey] = useState("dashboard");
   const [expandedKeys, setExpandedKeys] = useState([]);
   const navigate = useNavigate();
- 
+   const { data: profileData } = useGetProfileQuery();
 
   const contentRef = useRef({});
   
@@ -255,8 +256,8 @@ const Header = () => {
                               }`}
                               onClick={() => {
                                 setSelectedKey(child.key); 
-                                setExpandedKeys([]); // Collapse all expandedd items
-                                onClose(); // Close the drawer navigation
+                                setExpandedKeys([]); 
+                                onClose(); 
                               }}
                             >
                               <span className="block w-full text-black">
@@ -294,13 +295,13 @@ const Header = () => {
             <div className="flex gap-3">
               <div>
                 <img
-                  className="w-[45px] h-[45px]"
-                  src={profilee}
+                  className="w-[45px] rounded-full h-[45px]"
+                  src={profileData?.data?.image || profilee}
                   alt="profile"
                 />
               </div>
               <div className="text-end">
-                <h3>{ "Loading..."}</h3>
+                <h3>{profileData?.data?.fullName || "Admin"}</h3>
                 <h4 className="text-sm">Admin</h4>
               </div>
             </div>
