@@ -161,7 +161,7 @@ const Header = () => {
     navigate("/login");
   };
   return (
-    <div className=" bg-[#AB684D] text-white pt-5">
+    <div className=" bg-[#AB684D] text-white pt-4">
       <div className="flex justify-between">
         <div className="lg:hidden ">
           <div className="py-3 pl-4">
@@ -171,7 +171,7 @@ const Header = () => {
           </div>
         </div>
         <div></div>
-        <div className="flex gap-8 p-1 px-6">
+        <div className="flex gap-8  px-6">
           <div className="relative">
             <Link to={"/dashboard/Settings/notification"}>
               <div className="w-[45px] h-[45px] flex items-center justify-center text-xl rounded-full bg-white text-black ">

@@ -131,7 +131,7 @@ const SidBar = () => {
   useEffect(() => {
     const currentPath = location.pathname;
     let activeParent = null;
-    
+
     items.forEach((item) => {
       if (item.link === currentPath) {
         activeParent = item;
@@ -198,7 +198,7 @@ const SidBar = () => {
             <div key={item.key}>
               <Link
                 to={item.link}
-                className={`menu-item my-4 mx-3 py-3 px-3 flex items-center cursor-pointer ${
+                className={`menu-item my-4 mx-3 py-2 px-3 flex items-center cursor-pointer ${
                   selectedKey === item.key || isSettingsActive || isCreatorActive || isCategoriesActive
                     ? "bg-[#D17C51] text-[white] rounded-tr-md rounded-br-md"
                     : "bg-white text-[#AB684D] rounded-tr-md rounded-br-md hover:bg-gray-200"
@@ -262,10 +262,10 @@ const SidBar = () => {
       </div>
 
       {/* Logout Button */}
-      <div className="  w-full p-4 px-3">
+      <div className="  w-full p-2 px-3">
         <button
           onClick={handleLogout}
-          className="w-full flex bg-[white] text-[#AB684D] text-start rounded-tr-md rounded-br-md  p-3"
+          className="w-full flex bg-[white] text-[#AB684D] text-start rounded-tr-md rounded-br-md  p-2"
         >
           <span className="text-2xl">
             <IoIosLogIn />
