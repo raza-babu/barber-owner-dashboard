@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useMemo } from "react";
 import { Table } from "antd";
 import {
   useGetProfileQuery,
@@ -27,7 +28,6 @@ const Schedule = () => {
       status: barber.status,
     }));
   }, [barbers]);
-  console.log(barbers);
 
   // 🔹 Table columns
   const columns = [

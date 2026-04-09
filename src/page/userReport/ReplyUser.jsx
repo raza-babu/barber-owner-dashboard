@@ -1,17 +1,14 @@
-import { Form, Input, Modal } from 'antd'
-import React from 'react'
+import { Form, Input, Modal } from "antd";
 
-const ReplyUser = ({openAddModal,setOpenAddModal}) => {
-        const [form] = Form.useForm();
-        const handleCancel = () => {
-            form.resetFields();
-          
-            setOpenAddModal(false);
-          };
-    
-          const handleSubmit = async (values) => {
-           console.log(values)
-          };
+const ReplyUser = ({ openAddModal, setOpenAddModal }) => {
+  const [form] = Form.useForm();
+  const handleCancel = () => {
+    form.resetFields();
+
+    setOpenAddModal(false);
+  };
+
+  const handleSubmit = async () => {};
   return (
     <Modal
       centered
@@ -23,8 +20,6 @@ const ReplyUser = ({openAddModal,setOpenAddModal}) => {
       <div className="mb-6 mt-4">
         <h2 className="text-center font-bold text-lg mb-4">Reply</h2>
         <Form form={form} onFinish={handleSubmit} layout="vertical">
-   
-
           {/* Description */}
           <Form.Item
             label="Answer"
@@ -34,14 +29,13 @@ const ReplyUser = ({openAddModal,setOpenAddModal}) => {
             <Input.TextArea placeholder="Enter Reply" rows={4} />
           </Form.Item>
           <div className="flex gap-3 mt-3">
-          <button
+            <button
               type="submit"
               className="px-4 py-3 w-full bg-[#D17C51] text-white rounded-md"
-             
             >
-                Reply
+              Reply
             </button>
-          <button
+            <button
               type="button"
               className="px-4 py-3 w-full bg-[#D9000A] text-white rounded-md"
               onClick={handleCancel}
@@ -52,9 +46,7 @@ const ReplyUser = ({openAddModal,setOpenAddModal}) => {
         </Form>
       </div>
     </Modal>
-  )
-}
+  );
+};
 
-export default ReplyUser
-
-           
+export default ReplyUser;

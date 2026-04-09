@@ -1,14 +1,11 @@
 import {
   Form,
   Modal,
-  Upload,
   DatePicker,
   TimePicker,
   Input,
   Select,
 } from "antd";
-import React, { useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 const format = "HH:mm";
 const AddBooking = ({ openAddModal, setOpenAddModal }) => {
@@ -19,8 +16,8 @@ const AddBooking = ({ openAddModal, setOpenAddModal }) => {
     setOpenAddModal(false);
   };
 
-  const handleSubmit = (values) => {
-    console.log("Submitted:", values);
+  const handleSubmit = () => {
+    //console.log("Submitted:", values);
   };
 
   return (

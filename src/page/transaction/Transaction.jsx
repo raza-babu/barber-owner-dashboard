@@ -1,6 +1,5 @@
 import { Table, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Navigate } from "../../Navigate";
 import { useGetAllTreansactionOwnerQuery } from "../redux/api/manageApi";
@@ -9,7 +8,6 @@ export const Transaction = () => {
   const [searchTerm, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-console.log(searchTerm)
   const { data: transaction } = useGetAllTreansactionOwnerQuery({
     searchTerm,
     page: currentPage,

@@ -1,7 +1,6 @@
 import { Form, Modal, Select, TimePicker, Switch, message } from "antd";
-import React from "react";
 import dayjs from "dayjs";
-import { useAddBarberManagementMutation, useGetAllShedualeBarberQuery, useGetAllShedualeBarberSelectQuery } from "../redux/api/manageApi";
+import { useAddBarberManagementMutation, useGetAllShedualeBarberSelectQuery } from "../redux/api/manageApi";
 
 const format = "hh:mm A"; 
 
@@ -22,7 +21,6 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
      page: 1,
     limit: 100000,
   });
-  console.log(schedualeBarber)
   const [addBarberManagement] = useAddBarberManagementMutation();
 
   const handleCancel = () => {
@@ -31,7 +29,6 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
   };
 
   const handleSubmit = async (values) => {
-    console.log("Form Values:", values);
 
     // map schedule data
     const schedules = weekDays.map((day) => {
@@ -54,7 +51,6 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
       type:values?.type
     };
 
-    console.log("Final Payload:", data);
 
     try {
       const response = await addBarberManagement(data).unwrap();
@@ -62,7 +58,6 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
       setOpenAddModal(false);
       form.resetFields();
     } catch (error) {
-      console.error(error);
       message.error(error?.data?.message || "Something went wrong");
     }
   };

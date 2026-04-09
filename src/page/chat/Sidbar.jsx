@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSocket } from "../../context/ContextProvider";
 import { useGetProfileQuery } from "../redux/api/manageApi";
 import { Link } from "react-router-dom";
@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
   const { socket, socketLoading, socketError } = useSocket();
   const [chats, setChats] = useState([]);
-  console.log('dsf',chats)
   const { data: profileData } = useGetProfileQuery();
   const authId = profileData?.data?.id;
 
@@ -20,7 +19,7 @@ const Sidebar = () => {
     };
 
     const handleMessageList = (data) => {
-      console.log("Socket sidebar data:", data);
+      //console.log("Socket sidebar data:", data);
       setChats(data);
     };
 
@@ -109,7 +108,7 @@ const Sidebar = () => {
               key={chat.id || index}
               className="p-4 hover:bg-gray-50 border-b flex items-start gap-3 bg-white"
             >
-              <div className="h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
+              <div className="h-10 w-10 rounded-full overflow-hidden shrink-0">
                 <img
                   src={
                     chatt.receiverImage ||
@@ -128,7 +127,7 @@ const Sidebar = () => {
                         ? chatt.senderName
                         : chatt.receiverName || "Unknown User"}
                     </h3>
-                    <span className="text-xs text-gray-400 flex-shrink-0">
+                    <span className="text-xs text-gray-400 shrink-0">
                       {formatTime(chat.createdAt)}
                     </span>
                   </div>
@@ -144,7 +143,7 @@ const Sidebar = () => {
 
 
                     {isUnread && chatt.unReadMessagesCount > 0 && (
-                      <span className="ml-2 bg-blue-500 text-white text-xs font-bold rounded-full px-2 py-0.5 flex-shrink-0">
+                      <span className="ml-2 bg-blue-500 text-white text-xs font-bold rounded-full px-2 py-0.5 shrink-0">
                         {chatt.unReadMessagesCount}
                       </span>
                     )}

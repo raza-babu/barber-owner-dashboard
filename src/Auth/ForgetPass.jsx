@@ -1,5 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Checkbox, Form, Input, message } from "antd";
+import { useNavigate } from "react-router-dom";
+import { Form, Input, message } from "antd";
 import img from "../assets/header/auth.png";
 import { useForgotPasswordMutation } from "../page/redux/api/userApi";
 
@@ -7,7 +7,6 @@ const ForgetPass = () => {
   const [forgetPassword] = useForgotPasswordMutation()
    const navigate = useNavigate()
   const onFinish = async (values) => {
-    console.log(values);
 
     forgetPassword(values)
       .unwrap()
@@ -24,7 +23,7 @@ const ForgetPass = () => {
       
       <div className=" min-h-screen flex items-center justify-center">
         <div className="">
-          <div className=" md:px-16 px-5 py-16  md:w-[600px] rounded">
+          <div className=" md:px-16 px-5 py-16  md:w-150 rounded">
             <div className="text-center">
               <h2 className="text-2xl font-bold mb-2 text-gray-800">
                 Forget Password?
@@ -62,8 +61,7 @@ const ForgetPass = () => {
               <Form.Item>
               
                   <button
-                    type="primary"
-                    htmlType="submit"
+                    type="submit"
                     className="w-full py-2 mt-6 bg-[#D17C51] text-white rounded  focus:ring-2 focus:ring-gray-500"
                   >
                     Submit

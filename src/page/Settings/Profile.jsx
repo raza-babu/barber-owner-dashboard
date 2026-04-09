@@ -7,7 +7,6 @@ import { useGetProfileQuery, useUpdateProfileDataMutation, useUpdateProfileImage
 
 
 const Profile = () => {
-  const [profilePic, setProfilePic] = useState(null);
   const [activeTab, setActiveTab] = useState("1");
   const { data: profileData } = useGetProfileQuery();
   const [updateProfileData] = useUpdateProfileDataMutation();
@@ -29,7 +28,6 @@ const Profile = () => {
       message.success(response?.message);
       setImage(null);
     } catch (error) {
-      console.error(error);
       message.error(error?.data?.message || "Failed to upload image ❌");
     }
   };
@@ -47,19 +45,16 @@ const Profile = () => {
   }, [profileData, form]);
 
   const handleProfileUpdate = async (values) => {
-    console.log(values);
     const data = {
       phoneNumber: values?.phoneNumber,
       fullName: values?.fullName,
       gender: values?.gender,
     };
-    console.log(data);
     try {
       const response = await updateProfileData(data).unwrap();
 
       message.success(response?.message);
     } catch (error) {
-      console.error(error);
       message.error(error?.data?.message);
     }
   };
@@ -112,7 +107,6 @@ const Profile = () => {
               <button
                 className="bg-[#9C5F46] text-white py-2 px-5"
                 type="submit"
-                htmlType="submit"
                 block
               >
                 Save Changes
@@ -136,7 +130,7 @@ const Profile = () => {
         <div className="max-w-xl mx-auto mt-8 rounded-lg lg:p-6 ">
           {/* Profile Picture Section */}
           <div className="text-center mb-6">
-            <div className="relative w-[140px] h-[124px] mx-auto">
+            <div className="relative w-35 h-31 mx-auto">
               <input
                 type="file"
                 onChange={handleImageChange}
@@ -155,7 +149,7 @@ const Profile = () => {
               {activeTab === "1" && (
                 <label
                   htmlFor="img"
-                  className="absolute top-[80px] -right-2 bg-white rounded-full w-8 h-8 flex items-center justify-center cursor-pointer"
+                  className="absolute top-20 -right-2 bg-white rounded-full w-8 h-8 flex items-center justify-center cursor-pointer"
                 >
                   <IoCameraOutline className="text-black " />
                 </label>

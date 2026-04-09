@@ -1,16 +1,10 @@
 import {
   Form,
   Modal,
-  Upload,
-  DatePicker,
-  TimePicker,
   Input,
   Select,
   message,
 } from "antd";
-import React, { useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
 import { useAddServicesOwnerMutation } from "../redux/api/manageApi";
 
 const AddServices = ({ openAddModal, setOpenAddModal }) => {
@@ -23,21 +17,18 @@ const AddServices = ({ openAddModal, setOpenAddModal }) => {
   };
 
   const handleSubmit = async (values) => {
-    console.log("Submitted", values);
        const data = {
       duration: Number(values?.duration),
       price: Number(values?.price),
       availableTo: values?.availableTo,
       serviceName: values?.serviceName,
     };
-    console.log(data);
     try {
       const response = await addServices(data).unwrap();
 
       message.success(response?.message);
       setOpenAddModal(false);
     } catch (error) {
-      console.error(error);
       message.error(error?.data?.message);
     }
   };

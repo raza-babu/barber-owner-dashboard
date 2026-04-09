@@ -6,7 +6,6 @@ import {
   Select,
   message,
 } from "antd";
-import React from "react";
 import dayjs from "dayjs";
 import {
   useAddQueueMutation,
@@ -24,7 +23,6 @@ const AddSchedule = ({ openAddModal, setOpenAddModal }) => {
     page: 1,
     limit: 10000,
   });
-console.log(services)
   const [addQueue, { isLoading }] = useAddQueueMutation();
 
   const handleCancel = () => {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-
 import { io } from 'socket.io-client';
 import { SOCKET_BASE } from './baseApi';
  
@@ -8,7 +7,6 @@ export const useSocket = () => {
       const token = useSelector((s) => s.logInUser?.token);
   const [socket, setSocket] = useState(null);
 
-  console.log('Socket token:', token);
  
   useEffect(() => {
     const newSocket = io(SOCKET_BASE, {

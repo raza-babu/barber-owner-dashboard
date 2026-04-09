@@ -1,18 +1,12 @@
-import React, { useState } from 'react';
-import { Navigate } from '../../Navigate';
-import { Table, Input, Dropdown, Tag, Button } from "antd";
+import { useState } from "react";
+import { Navigate } from "../../Navigate";
+import { Table, Input, Tag } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { IoIosArrowDown } from "react-icons/io";
-import { Link } from "react-router-dom";
-import ReplyUser from './ReplyUser';
+import ReplyUser from "./ReplyUser";
 
 const UserReport = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
-  const items = [
-    { label: <button>Blocked</button>, key: "0" },
-    { label: <button>Active</button>, key: "1" },
-    { label: <button>All Customers</button>, key: "2" },
-  ];
+
 
   const columns = [
     {
@@ -32,30 +26,39 @@ const UserReport = () => {
     {
       title: "Region",
       dataIndex: "region",
-      render: () => <span className="text-gray-400">Image blur</span>
+      render: () => <span className="text-gray-400">Image blur</span>,
     },
     {
       title: "Status",
       dataIndex: "status",
       render: (status) => {
-        let color = status === 'Active' ? 'green' : 'red';
         return (
-          <Tag color={status === "Active" ? "green" : "volcano"} className="rounded-full px-3">
+          <Tag
+            color={status === "Active" ? "green" : "volcano"}
+            className="rounded-full px-3"
+          >
             {status}
           </Tag>
         );
-      }
+      },
     },
     {
       title: "Action",
       dataIndex: "action",
       render: () => (
         <div className="flex gap-2">
-          <button onClick={() => setOpenAddModal(true)} className="bg-[#D17C51] border text-white px-4 py-1 rounded">Reply</button>
-          <button className="bg-[#D15151] text-white px-4 py-1 border rounded">Argon</button>
+          <button
+            onClick={() => setOpenAddModal(true)}
+            className="bg-[#D17C51] border text-white px-4 py-1 rounded"
+          >
+            Reply
+          </button>
+          <button className="bg-[#D15151] text-white px-4 py-1 border rounded">
+            Argon
+          </button>
         </div>
       ),
-    }
+    },
   ];
 
   const data = [
@@ -118,9 +121,7 @@ const UserReport = () => {
   ];
 
   const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`Selected keys: ${selectedRowKeys}`, selectedRows);
-    },
+    onChange: (selectedRowKeys, selectedRows) => {},
   };
 
   return (
@@ -138,8 +139,6 @@ const UserReport = () => {
       </div>
 
       <div className="p-2">
-      
-
         <div className="rounded-md overflow-hidden">
           <Table
             columns={columns}
@@ -147,11 +146,14 @@ const UserReport = () => {
             rowSelection={rowSelection}
             pagination={false}
             rowClassName="border-b border-gray-200"
-            scroll={{ x: 800 }} 
+            scroll={{ x: 800 }}
           />
         </div>
       </div>
-      <ReplyUser setOpenAddModal={setOpenAddModal} openAddModal={openAddModal}></ReplyUser>
+      <ReplyUser
+        setOpenAddModal={setOpenAddModal}
+        openAddModal={openAddModal}
+      ></ReplyUser>
     </div>
   );
 };

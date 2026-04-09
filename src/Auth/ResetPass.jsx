@@ -1,4 +1,4 @@
-import { Checkbox, Form, Input, message } from "antd";
+import { Form, Input, message } from "antd";
 import img from "../assets/header/auth.png";
 import { useNavigate } from "react-router-dom";
 import { useResetPasswordMutation } from "../page/redux/api/userApi";
@@ -7,7 +7,6 @@ const ResetPass = () => {
   const [resetPassword] = useResetPasswordMutation();
 
   const onFinish = async (values) => {
-    console.log(values);
 
     const data = {
       email: localStorage.getItem("email"),
@@ -26,7 +25,7 @@ const ResetPass = () => {
     <div className="min-h-screen md:grid grid-cols-2 bg-[#F7F0ED]">
       <div className=" min-h-screen flex items-center justify-center">
         <div className="">
-          <div className=" md:px-16 px-5 py-16  md:w-[600px] ">
+          <div className=" md:px-16 px-5 py-16  md:w-150 ">
             <div className="text-center">
               <h2 className="text-2xl font-bold mb-2 text-gray-800">
                 Set a new password

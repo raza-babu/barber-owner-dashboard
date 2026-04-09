@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Paperclip, Send } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Send } from "lucide-react";
 import { Navigate } from "../../Navigate";
 import { useParams } from "react-router-dom";
 import { useSocket } from "../../context/ContextProvider";
@@ -24,8 +24,12 @@ const ChatBox = () => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("connect", () => console.log("Socket connected"));
-    socket.on("disconnect", () => console.log("Socket disconnected"));
+    socket.on("connect", () => {
+      //console.log("Socket connected");
+    });
+    socket.on("disconnect", () => {
+      //console.log("Socket disconnected")
+    });
     return () => {
       socket.off("connect");
       socket.off("disconnect");
@@ -56,7 +60,7 @@ const ChatBox = () => {
     if (!socket) return;
 
     const handleChats = (data) => {
-      console.log("Chats response:", data);
+      //console.log("Chats response:", data);
 
       // ✅ Set messages
       setMessages(data.chats || []);
@@ -154,7 +158,7 @@ const ChatBox = () => {
                   }`}
                 >
                   {!isSelf && (
-                    <div className="h-8 w-8 rounded-full overflow-hidden mt-1 flex-shrink-0">
+                    <div className="h-8 w-8 rounded-full overflow-hidden mt-1 shrink-0">
                       <img
                         src={
                           receiver?.image ||
@@ -166,13 +170,15 @@ const ChatBox = () => {
                     </div>
                   )}
                   <div
-                    className={`p-3 rounded-lg max-w-[600px] break-words ${
+                    className={`p-3 rounded-lg max-w-150 wrap-break-word ${
                       isSelf
                         ? "bg-[#AB684D] text-white rounded-br-none"
                         : "bg-gray-100 text-black rounded-bl-none"
                     }`}
                   >
-                    <p className="break-words whitespace-pre-wrap overflow-wrap-anywhere">{msg.message}</p>
+                    <p className="wrap-break-word whitespace-pre-wrap overflow-wrap-anywhere">
+                      {msg.message}
+                    </p>
                   </div>
                 </div>
               );

@@ -1,7 +1,4 @@
-import { Form, Modal, Upload, DatePicker, TimePicker, Input } from "antd";
-import React, { useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
+import { Form, Modal, DatePicker, Input } from "antd";
 const AddManage = ({ openAddModal, setOpenAddModal }) => {
   const [form] = Form.useForm();
   const handleCancel = () => {
@@ -10,8 +7,8 @@ const AddManage = ({ openAddModal, setOpenAddModal }) => {
     setOpenAddModal(false);
   };
 
-  const handleSubmit = (values) => {
-    console.log("Submitted:", values);
+  const handleSubmit = () => {
+    //console.log("Submitted:", values);
   };
 
   return (

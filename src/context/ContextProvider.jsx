@@ -1,8 +1,8 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -14,7 +14,6 @@ const SocketContext = createContext(null);
 export const SocketProvider = ({ children }) => {
   const [socketLoading, setSocketLoading] = useState(false);
   const token = useSelector((s) => s.logInUser?.token);
-  console.log(token);
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -35,14 +34,13 @@ export const SocketProvider = ({ children }) => {
       withCredentials: true,
     });
 
-    console.log(socket);
     socket.on("connect", () => {
       setSocketLoading(false);
-      console.log("Socket connected:", socket.id);
+     // console.log("Socket connected:", socket.id);
     });
 
     socket.on("disconnect", () => {
-      console.log("Socket disconnected");
+      //console.log("Socket disconnected");
     });
 
     socketRef.current = socket;

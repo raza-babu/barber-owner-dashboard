@@ -1,7 +1,5 @@
 import {
   Table,
-  Input,
-  Pagination,
   Select,
   DatePicker,
   message,
@@ -12,8 +10,7 @@ import {
   Avatar,
   Divider,
 } from "antd";
-import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
-import { Navigate } from "../../Navigate";
+import { EyeOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import dayjs from "dayjs";
 
@@ -30,8 +27,6 @@ const STATUS_OPTIONS = [
 
 const ShopRegistration = () => {
   const today = dayjs().format("YYYY-MM-DD");
-  const [searchTerm, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [updateStatus] = useUpdateStatusCustomerMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -50,7 +45,6 @@ const ShopRegistration = () => {
   const [status, setStatus] = useState(null);
   const [date, setDate] = useState(null);
 
-  const pageSize = 10;
 
   // ✅ API QUERY PARAMS
   const { data: customerData } = useGetAllCustomerOwnerQuery({
@@ -60,10 +54,6 @@ const ShopRegistration = () => {
     status: status || undefined,
     date: activeTab === "QUEUE" ? date : undefined,
   });
-  console.log(customerData);
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
   const handleStatusChange = async (bookingId, status) => {
     try {
       const res = await updateStatus({
@@ -73,7 +63,6 @@ const ShopRegistration = () => {
       message.success(res?.message);
     } catch (error) {
       message.error(error?.data?.message);
-      console.error("Status update failed", error);
     }
   };
 

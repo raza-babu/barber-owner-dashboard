@@ -19,7 +19,6 @@ const Services = () => {
     page: currentPage,
     limit: pageSize,
   });
-  console.log(services);
 
   const [openAddModal, setOpenAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);

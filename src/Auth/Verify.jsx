@@ -1,7 +1,7 @@
 import { useState } from "react";
 import OTPInput from "react-otp-input";
 import img from "../assets/header/auth.png";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { useVerifyOtpMutation } from "../page/redux/api/userApi";
 
@@ -21,7 +21,6 @@ const Verify = () => {
       message.success(response?.message);
       navigate("/reset");
     } catch (error) {
-      console.error(error);
       message.error(error?.data?.message);
     }
   };
@@ -35,7 +34,6 @@ const Verify = () => {
 
   //     message.success(response.message);
   //   } catch (error) {
-  //     console.error(error);
   //     message.error(error?.data?.message || "Failed to resend OTP!");
   //   }
   // };
@@ -43,7 +41,7 @@ const Verify = () => {
     <div className="min-h-screen md:grid grid-cols-2 bg-[#F7F0ED]">
       <div className=" min-h-screen flex items-center justify-center">
         <div className="">
-          <div className=" lg:w-[500px] md:px-16 px-5 py-16 ">
+          <div className=" lg:w-125 md:px-16 px-5 py-16 ">
             <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
               Check your email
             </h2>

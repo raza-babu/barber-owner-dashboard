@@ -63,7 +63,6 @@ const Customer = () => {
     status: status || undefined,
     date: activeTab === "QUEUE" ? date : undefined,
   });
-  console.log(customerData);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -76,7 +75,6 @@ const Customer = () => {
       message.success(res?.message);
     } catch (error) {
       message.error(error?.data?.message);
-      console.error("Status update failed", error);
     }
   };
 

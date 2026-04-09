@@ -7,7 +7,6 @@ import { useState } from "react";
 
 export const Barber = () => {
   const [searchTerm, setSearch] = useState("");
-  console.log(searchTerm);
   const [currentPage, setCurrentPage] = useState(1);
 
   const pageSize = 10;
@@ -16,7 +15,6 @@ export const Barber = () => {
     page: currentPage,
     limit: pageSize,
   });
-  console.log(barberData);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };

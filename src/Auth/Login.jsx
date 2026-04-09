@@ -1,7 +1,6 @@
 import { Checkbox, Form, Input, message } from "antd";
 import img from "../assets/header/auth.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
 import { useLoginAdminMutation } from "../page/redux/api/userApi";
 import { setToken } from "../page/redux/features/auth/authSlice";
 import { useDispatch } from "react-redux";
@@ -11,10 +10,8 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const onFinish = async (values) => {
-    console.log(values);
     try {
       const payload = await loginAdmin(values).unwrap();
-      console.log(payload);
       if (payload?.data?.role === "SALOON_OWNER") {
         dispatch(setToken(payload?.data?.accessToken));
         message.success(payload?.message);
@@ -23,9 +20,7 @@ const Login = () => {
         message.error("User Not Found");
       }
     } catch (error) {
-      console.error("Login error:", error);
       message.error(error?.data?.message || "Something went wrong. Try again!");
-    } finally {
     }
   };
 

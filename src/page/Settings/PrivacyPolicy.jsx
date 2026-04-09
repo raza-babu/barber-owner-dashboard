@@ -1,7 +1,5 @@
 import  { useState, useRef, } from 'react';
 import JoditEditor from 'jodit-react';
-import { FaArrowLeft } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import { Navigate } from '../../Navigate';
 
 
@@ -10,10 +8,7 @@ const PrivacyPolicy = () => {
   const editor = useRef(null);
   const [content, setContent] = useState('');
   // const [isLoading, seLoading] = useState(false)
-  const navigate = useNavigate(); 
-  // const handleTerms = () => {
-  //     console.log(content)
-  // }
+
   const config = {
       readonly: false,
       placeholder: 'Start typings...',

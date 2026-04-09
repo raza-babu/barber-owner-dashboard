@@ -1,11 +1,9 @@
-import { Form, Modal, Upload, DatePicker, TimePicker, Input, Select, message } from "antd";
-import React, { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { Form, Modal, Input, Select, message } from "antd";
+import { useEffect } from "react";
 import { useUpdateServicesOwnerMutation } from "../redux/api/manageApi";
 
 //adf
 const EditServices = ({ editModal, setEditModal,selectedUser }) => {
-  console.log(selectedUser?.id)
     const [form] = Form.useForm();
 
   const [updateServices] = useUpdateServicesOwnerMutation()
@@ -28,21 +26,18 @@ useEffect(() => {
 
     const handleSubmit = async (values) => {
       const id = selectedUser?.id
-      console.log("Submitted:", values);
         const data = {
             duration: Number(values?.duration),
             price: Number(values?.price),
             availableTo: values?.availableTo,
             serviceName: values?.serviceName,
           };
-          console.log(data);
           try {
             const response = await updateServices({data,id}).unwrap();
       
             message.success(response?.message);
             setEditModal(false);
           } catch (error) {
-            console.error(error);
             message.error(error?.data?.message);
           }
     };
