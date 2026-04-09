@@ -92,7 +92,7 @@ const businessApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["updateProfile"],
+      providesTags: [TagTypes.barberOwners],
     }),
 
     getSingleBarber: builder.query({

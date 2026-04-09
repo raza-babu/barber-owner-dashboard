@@ -55,7 +55,11 @@ const Customer = () => {
   const pageSize = 10;
 
   // ✅ API QUERY PARAMS
-  const { data: customerData } = useGetAllCustomerOwnerQuery({
+  const {
+    data: customerData,
+    isLoading,
+    isFetching,
+  } = useGetAllCustomerOwnerQuery({
     page: currentPage,
     limit: pageSize,
     searchTerm: searchTerm || undefined,
@@ -78,11 +82,15 @@ const Customer = () => {
     }
   };
 
+  const meta = customerData?.meta;
+
   const columns = [
     {
       title: "SI No",
       key: "siNo",
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) => {
+        return Number(index + 1) + (meta?.page - 1) * pageSize;
+      },
     },
 
     {
@@ -135,7 +143,7 @@ const Customer = () => {
     {
       title: "Total Price",
       dataIndex: "totalPrice",
-      render: (price) => `$${price}`,
+      render: (price) => `£${price}`,
     },
     {
       title: "Status",
@@ -188,9 +196,10 @@ const Customer = () => {
           {activeTab === "QUEUE" && (
             <DatePicker
               value={date ? dayjs(date) : null}
-              onChange={(value) =>
-                setDate(value ? dayjs(value).format("YYYY-MM-DD") : null)
-              }
+              onChange={(value) => {
+                setDate(value ? dayjs(value).format("YYYY-MM-DD") : null);
+                setCurrentPage(1);
+              }}
             />
           )}
 
@@ -211,7 +220,10 @@ const Customer = () => {
 
           {/* Search */}
           <Input
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
             placeholder="Search"
             prefix={<SearchOutlined />}
             style={{ width: 150, height: "42px" }}
@@ -226,6 +238,7 @@ const Customer = () => {
             key={tab}
             onClick={() => {
               setActiveTab(tab);
+              setCurrentPage(1);
               setStatus(null);
 
               if (tab === "QUEUE") {
@@ -252,19 +265,22 @@ const Customer = () => {
           pagination={false}
           rowClassName="border-b border-gray-300"
           scroll={{ x: 800 }}
+          loading={isLoading || isFetching}
         />
       </div>
 
       {/* PAGINATION */}
-      <div className="mt-4 flex justify-center">
-        <Pagination
-          current={currentPage}
-          pageSize={pageSize}
-          total={customerData?.meta?.total || 0}
-          onChange={handlePageChange}
-          showSizeChanger={false}
-        />
-      </div>
+      {meta?.totalPages > 1 && (
+        <div className="mt-4 flex justify-center">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={customerData?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+          />
+        </div>
+      )}
 
       <Modal
         title="Booking Details"

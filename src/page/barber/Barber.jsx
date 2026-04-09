@@ -10,7 +10,11 @@ export const Barber = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const pageSize = 10;
-  const { data: barberData } = useGetAllBarberOwnerQuery({
+  const {
+    data: barberData,
+    isLoading,
+    isFetching,
+  } = useGetAllBarberOwnerQuery({
     searchTerm: searchTerm,
     page: currentPage,
     limit: pageSize,
@@ -18,11 +22,14 @@ export const Barber = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  const meta = barberData?.meta || {};
+
   const columns = [
     {
       title: "SI No",
       key: "siNo",
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) => Number(index + 1) + (meta?.page - 1) * pageSize,
     },
     {
       title: "Barber Name",
@@ -54,7 +61,7 @@ export const Barber = () => {
       title: "Hourly Rate",
       dataIndex: "hourlyRate",
       key: "hourlyRate",
-      render: (rate) => `$${rate}`,
+      render: (rate) => `£${rate}`,
     },
   ];
 
@@ -68,7 +75,10 @@ export const Barber = () => {
           <Navigate title={"Barbers"} />
         </div>
         <Input
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
           placeholder="Search"
           prefix={<SearchOutlined />}
           style={{ width: 250, height: "42px" }}
@@ -84,18 +94,21 @@ export const Barber = () => {
             pagination={false}
             rowClassName="border-b border-gray-300"
             scroll={{ x: 800 }}
+            loading={isLoading || isFetching}
           />
         </div>
       </div>
-      <div className="mt-4 flex justify-center">
-        <Pagination
-          current={currentPage}
-          pageSize={pageSize}
-          total={barberData?.meta?.total || 0}
-          onChange={handlePageChange}
-          showSizeChanger={false}
-        />
-      </div>
+      {meta?.totalPages > 1 && (
+        <div className="mt-4 flex justify-center">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={barberData?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+          />
+        </div>
+      )}
     </div>
   );
 };
