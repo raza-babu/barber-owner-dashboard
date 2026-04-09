@@ -1,3 +1,4 @@
+import TagTypes from "../../../constants/tayType.constant";
 import { baseApi } from "./baseApi";
 
 const businessApi = baseApi.injectEndpoints({
@@ -29,7 +30,7 @@ const businessApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["updateProfile"],
+      providesTags: [TagTypes.customerOwners],
     }),
 
     getAllCustomerDashboard: builder.query({
@@ -94,7 +95,7 @@ const businessApi = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
-      getSingleBarber: builder.query({
+    getSingleBarber: builder.query({
       query: ({ id }) => {
         return {
           url: `/barbers/${id}`,
@@ -114,9 +115,7 @@ const businessApi = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
-
-
-  getAllServicesOwnerSelect: builder.query({
+    getAllServicesOwnerSelect: builder.query({
       query: ({ page, limit }) => {
         return {
           url: `/services?page=${page}&limit=${limit}`,
@@ -125,9 +124,6 @@ const businessApi = baseApi.injectEndpoints({
       },
       providesTags: ["updateProfile"],
     }),
-
-
-
 
     getAllShedualeBarberSelect: builder.query({
       query: ({ page, limit }) => {
@@ -198,7 +194,7 @@ const businessApi = baseApi.injectEndpoints({
     }),
 
     getDatebarber: builder.query({
-      query: ({ adminId,barberId,date }) => {
+      query: ({ adminId, barberId, date }) => {
         return {
           url: `/bookings/barbers/${adminId}/${barberId}?date=${date}`,
           method: "GET",
@@ -207,9 +203,8 @@ const businessApi = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
-
     getScheduleDate: builder.query({
-      query: ({ id,status }) => {
+      query: ({ id, status }) => {
         return {
           url: `/bookings/walking-in/barbers/${id}/${status}`,
           method: "GET",
@@ -616,7 +611,7 @@ const businessApi = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-     AddQueue: builder.mutation({
+    AddQueue: builder.mutation({
       query: (data) => {
         return {
           url: "/bookings",
@@ -711,5 +706,5 @@ export const {
   useGetScheduleDateQuery,
   useGetDatebarberQuery,
   useAddQueueMutation,
-  useGetAllServicesOwnerSelectQuery
+  useGetAllServicesOwnerSelectQuery,
 } = businessApi;
