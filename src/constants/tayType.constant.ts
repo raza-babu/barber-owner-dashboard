@@ -4,6 +4,7 @@ const TagTypes = {
   barberOwners: "BarberOwners",
   customers: "Customers",
   reports: "Reports",
+  sheduleBarbers: "SheduleBarbers",
 };
 
 export default TagTypes;

@@ -149,7 +149,7 @@ const businessApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["updateProfile"],
+      providesTags: [TagTypes.sheduleBarbers],
     }),
 
     addBarberManagement: builder.mutation({
@@ -160,7 +160,7 @@ const businessApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["updateProfile"],
+      invalidatesTags: [TagTypes.sheduleBarbers],
     }),
 
     updateServicesOwner: builder.mutation({

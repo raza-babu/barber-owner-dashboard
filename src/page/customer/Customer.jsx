@@ -206,7 +206,10 @@ const Customer = () => {
           {/* Status Select */}
           <Select
             value={status}
-            onChange={(value) => setStatus(value || null)}
+            onChange={(value) => {
+              setStatus(value || null);
+              setCurrentPage(1);
+            }}
             allowClear
             placeholder="Status"
             style={{ width: 150, height: "42px" }}

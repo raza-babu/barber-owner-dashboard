@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { Table, Input, Dropdown, Pagination } from "antd";
+import { useState } from "react";
+import { Table, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { Navigate } from "../../Navigate";
-import { IoIosArrowDown } from "react-icons/io";
 import ManageBarber from "./ManageBarber";
 import AddSchedual from "./AddSchedual";
 import { useGetAllShedualeBarberQuery } from "../redux/api/manageApi";
@@ -17,7 +16,7 @@ const ShedualManagement = () => {
 
   const pageSize = 10;
 
-  const { data, isLoading } = useGetAllShedualeBarberQuery({
+  const { data, isLoading, isFetching } = useGetAllShedualeBarberQuery({
     all: hireType === "non-hired",
     searchTerm,
     page: currentPage,
@@ -26,7 +25,7 @@ const ShedualManagement = () => {
 
   const dataSource =
     data?.data?.map((barber, index) => ({
-      key: index + 1,
+      key: index,
       barberFullName: barber.barberName,
       id: barber.barberId,
       barberEmail: barber.barberEmail,
@@ -35,10 +34,13 @@ const ShedualManagement = () => {
       image: barber.barberImage,
     })) || [];
 
+  const meta = data?.meta || {};
+
   const columns = [
     {
-      title: "#",
+      title: "SI No",
       dataIndex: "key",
+      render: (_, __, index) => Number(index + 1) + (meta?.page - 1) * pageSize,
     },
     ...(hireType === "non-hired"
       ? [
@@ -97,22 +99,21 @@ const ShedualManagement = () => {
 
   return (
     <div className="bg-white p-3 h-[87vh]">
-      
-
       {/* FILTER BAR */}
       <div className="md:flex justify-between  items-center ">
         <Navigate title="Schedule Management" />
         <div className="flex gap-4 justify-between mb-4">
-        
-
           <Input
             placeholder="Search"
             prefix={<SearchOutlined />}
             className="w-64"
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
           />
-            <button
-            className="bg-[#D17C51] text-white px-5 py-2 rounded"
+          <button
+            className="bg-[#D17C51] w-75 text-white px-5 py-1.5 rounded cursor-pointer"
             onClick={() => setOpenAddModal(true)}
           >
             + New Schedule
@@ -145,20 +146,22 @@ const ShedualManagement = () => {
         <Table
           dataSource={dataSource}
           columns={columns}
-          loading={isLoading}
+          loading={isLoading || isFetching}
           pagination={false}
           scroll={{ x: 800 }}
         />
 
-        <div className="flex justify-center mt-4">
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={data?.meta?.total || 0}
-            onChange={(page) => setCurrentPage(page)}
-            showSizeChanger={false}
-          />
-        </div>
+        {meta?.totalPages > 1 && (
+          <div className="flex justify-center mt-4">
+            <Pagination
+              current={currentPage}
+              pageSize={pageSize}
+              total={data?.meta?.total || 0}
+              onChange={(page) => setCurrentPage(page)}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
       </>
 
       {/* ================= MANAGE TAB ================= */}
