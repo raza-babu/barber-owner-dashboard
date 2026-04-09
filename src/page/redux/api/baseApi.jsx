@@ -1,17 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-//sdf
+import { message } from "antd";
+
 const baseQuery = fetchBaseQuery({
   baseUrl: "https://backend.barberstime.com/api/v1",
-  // prepareHeaders: (headers) => {
-  //   const token = JSON.parse(localStorage.getItem("accessToken"));
-  //   if (token) {
-  //     headers.set("Authorization", `${token}`);
-  //   }
-  //   return headers;
-  // },
   prepareHeaders: (headers, { getState }) => {
     const token = getState().logInUser.token;
-    
     if (token) {
       headers.set("authorization", `${token}`);
     }
@@ -19,14 +12,17 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-
 export const baseApi = createApi({
   reducerPath: "baseApi",
-  baseQuery: baseQuery,
+  baseQuery: async (args, api, extraOptions) => {
+    const result = await baseQuery(args, api, extraOptions);
+    if (result?.error?.status === 401) {
+      localStorage.clear();
+      message.error("Session Expired");
+      window.location.href = "/login";
+    }
+    return result;
+  },
   tagTypes: ["overview", "host"],
   endpoints: () => ({}),
 });
-
-
-export const SOCKET_BASE = "https://backend.barberstime.com";
-// asdfsf
