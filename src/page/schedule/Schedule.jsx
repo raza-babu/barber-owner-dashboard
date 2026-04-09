@@ -32,8 +32,9 @@ const Schedule = () => {
   // 🔹 Table columns
   const columns = [
     {
-      title: "#",
+      title: "SI No",
       dataIndex: "key",
+      // render: (_, __, index) => Number(index + 1) + (meta?.page - 1) * pageSize,
     },
     {
       title: "Barber",
@@ -85,13 +86,13 @@ const Schedule = () => {
       <div className="flex justify-between mb-4">
         <Navigate title={"Appointment Date"} />
         {status === "QUEUE" && (
-        <button
-          className="bg-[#D17C51] px-3 py-2 rounded text-white mb-4"
-          onClick={() => setOpenAddModal(true)}
-        >
-          Add Queue
-        </button>
-            )}
+          <button
+            className="bg-[#D17C51] px-3 py-2 rounded text-white mb-4"
+            onClick={() => setOpenAddModal(true)}
+          >
+            Add Queue
+          </button>
+        )}
       </div>
 
       <div className="flex gap-4 mb-4">

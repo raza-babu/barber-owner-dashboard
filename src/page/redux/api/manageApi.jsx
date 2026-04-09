@@ -210,7 +210,7 @@ const businessApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["updateProfile"],
+      providesTags: [TagTypes.scheduleDate],
     }),
 
     addServicesOwner: builder.mutation({
