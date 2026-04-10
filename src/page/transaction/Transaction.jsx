@@ -3,24 +3,31 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Navigate } from "../../Navigate";
 import { useGetAllTreansactionOwnerQuery } from "../redux/api/manageApi";
+import useDebounce from "../../hooks/useDebounce";
 
 export const Transaction = () => {
-  const [searchTerm, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-  const { data: transaction } = useGetAllTreansactionOwnerQuery({
+  const { searchTerm } = useDebounce({ searchQuery, setCurrentPage }); //debounce handled
+  const {
+    data: transaction,
+    isLoading,
+    isFetching,
+  } = useGetAllTreansactionOwnerQuery({
     searchTerm,
     page: currentPage,
     limit: pageSize,
   });
+
+  const meta = transaction?.meta || {};
 
   const handlePageChange = (page) => setCurrentPage(page);
 
   const columns = [
     {
       title: "SI No",
-      key: "siNo",
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) => Number(index + 1) + (meta?.page - 1) * pageSize,
     },
     {
       title: "Date",
@@ -45,8 +52,8 @@ export const Transaction = () => {
     },
     {
       title: "Customer Email",
-      dataIndex: "customEmail",
-      key: "customEmail",
+      dataIndex: "customerEmail",
+      key: "customerEmail",
     },
     {
       title: "Barber Name",
@@ -72,7 +79,7 @@ export const Transaction = () => {
       title: "Paid Amount",
       dataIndex: "paymentAmount",
       key: "paymentAmount",
-      render: (text) => `$${text}`,
+      render: (text) => `£${text}`,
     },
     {
       title: "Payment Status",
@@ -81,7 +88,9 @@ export const Transaction = () => {
       render: (status) => (
         <span
           className={`px-2 py-1 rounded ${
-            status === "COMPLETED" ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
+            status === "COMPLETED"
+              ? "bg-green-200 text-green-800"
+              : "bg-red-200 text-red-800"
           }`}
         >
           {status}
@@ -98,10 +107,10 @@ export const Transaction = () => {
         <div className="flex justify-between">
           <Navigate title={"Transaction"} />
           <Input
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search"
             prefix={<SearchOutlined />}
-              style={{ width: 150, height: "42px" }}
+            style={{ width: 150, height: "42px" }}
           />
         </div>
 
@@ -114,19 +123,22 @@ export const Transaction = () => {
               pagination={false}
               rowClassName="border-b border-gray-300"
               scroll={{ x: 1000 }}
+              loading={isLoading || isFetching}
             />
           </div>
         </div>
 
-        <div className="mt-4 flex justify-center">
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={transaction?.meta?.total || 0}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-          />
-        </div>
+        {meta?.totalPages > 1 && (
+          <div className="mt-4 flex justify-center">
+            <Pagination
+              current={currentPage}
+              pageSize={pageSize}
+              total={transaction?.meta?.total || 0}
+              onChange={handlePageChange}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

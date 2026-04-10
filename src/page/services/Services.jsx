@@ -50,6 +50,10 @@ const Services = () => {
   };
   const columns = [
     {
+      title: "SI No",
+      render: (_, __, index) => Number(index + 1) + (meta?.page - 1) * pageSize,
+    },
+    {
       title: "Service Name",
       dataIndex: "name",
       key: "name",
@@ -69,7 +73,7 @@ const Services = () => {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: (price) => `$${price}`,
+      render: (price) => `£${price}`,
     },
     {
       title: "Actions",

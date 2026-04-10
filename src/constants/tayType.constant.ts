@@ -6,7 +6,8 @@ const TagTypes = {
   reports: "Reports",
   sheduleBarbers: "SheduleBarbers",
   scheduleDate: "ScheduleDate",
-  servicesOwner: "ServicesOwner"
+  servicesOwner: "ServicesOwner",
+  transactions: "Transactions"
 };
 
 export default TagTypes;

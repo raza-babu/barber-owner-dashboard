@@ -60,7 +60,7 @@ const businessApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["updateProfile"],
+      providesTags: [TagTypes.transactions],
     }),
 
     updateStatusOwner: builder.mutation({
