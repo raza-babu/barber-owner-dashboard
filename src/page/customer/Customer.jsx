@@ -24,20 +24,12 @@ import { Link } from "react-router-dom";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import useDebounce from "../../hooks/useDebounce";
 
-const BOOKING_STATUS_OPTIONS = [
+const STATUS_OPTIONS = [
   // { value: "PENDING", label: "Pending" },
   // { value: "CONFIRMED", label: "Confirmed" },
   { value: "CANCELLED", label: "Cancelled" },
   { value: "COMPLETED", label: "Completed" },
-  { value: "RESCHEDULED", label: "Rescheduled" },
-];
-
-const QUEUE_STATUS_OPTIONS2 = [
-  // { value: "PENDING", label: "Pending" },
-  // { value: "CONFIRMED", label: "Confirmed" },
-  { value: "CANCELLED", label: "Cancelled" },
-  { value: "COMPLETED", label: "Completed" },
-  // { value: "RESCHEDULED", label: "Rescheduled" },
+  { value: "NO_SHOW", label: "No show" },
 ];
 
 const Customer = () => {
@@ -164,11 +156,7 @@ const Customer = () => {
         <Select
           value={status}
           style={{ width: 150 }}
-          options={
-            activeTab === "BOOKING"
-              ? BOOKING_STATUS_OPTIONS
-              : QUEUE_STATUS_OPTIONS2
-          }
+          options={STATUS_OPTIONS}
           onChange={(value) => handleStatusChange(record.bookingId, value)}
         />
       ),

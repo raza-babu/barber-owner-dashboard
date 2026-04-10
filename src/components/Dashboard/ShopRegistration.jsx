@@ -16,15 +16,17 @@ import dayjs from "dayjs";
 
 import { Link } from "react-router-dom";
 import { BiMessageRoundedDots } from "react-icons/bi";
-import { useGetAllCustomerOwnerQuery, useUpdateStatusCustomerMutation } from "../../page/redux/api/manageApi";
+import {
+  useGetAllCustomerOwnerQuery,
+  useUpdateStatusCustomerMutation,
+} from "../../page/redux/api/manageApi";
 const STATUS_OPTIONS = [
-  { value: "PENDING", label: "Pending" },
-  { value: "CONFIRMED", label: "Confirmed" },
+  // { value: "PENDING", label: "Pending" },
+  // { value: "CONFIRMED", label: "Confirmed" },
   { value: "CANCELLED", label: "Cancelled" },
   { value: "COMPLETED", label: "Completed" },
-  { value: "RESCHEDULED", label: "Rescheduled" },
+  { value: "NO_SHOW", label: "No show" },
 ];
-
 const ShopRegistration = () => {
   const today = dayjs().format("YYYY-MM-DD");
   const [updateStatus] = useUpdateStatusCustomerMutation();
@@ -45,11 +47,12 @@ const ShopRegistration = () => {
   const [status, setStatus] = useState(null);
   const [date, setDate] = useState(null);
 
-
   // ✅ API QUERY PARAMS
-  const { data: customerData } = useGetAllCustomerOwnerQuery({
-  
- 
+  const {
+    data: customerData,
+    isLoading,
+    isFetching,
+  } = useGetAllCustomerOwnerQuery({
     type: activeTab !== "ALL" ? activeTab : undefined,
     status: status || undefined,
     date: activeTab === "QUEUE" ? date : undefined,
@@ -123,7 +126,7 @@ const ShopRegistration = () => {
     {
       title: "Total Price",
       dataIndex: "totalPrice",
-      render: (price) => `$${price}`,
+      render: (price) => `£${price}`,
     },
     {
       title: "Status",
@@ -161,39 +164,38 @@ const ShopRegistration = () => {
     },
   ];
 
-  const tableData = customerData?.data.slice(1,5) || [];
+  const tableData = customerData?.data.slice(1, 5) || [];
 
   return (
     <div className="p-3 bg-white mt-4">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold pb-2">Recent Booking Request</h2>
         <Link to={"/dashboard/customer"}>
-          <button className="text-[#AB684D]">View all</button>
+          <button className="text-[#AB684D] cursor-pointer">View all</button>
         </Link>
       </div>
       <div className="md:flex justify-between items-center">
-      <div className="flex gap-4 mt-4">
-        {["BOOKING", "QUEUE"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => {
-              setActiveTab(tab);
-              setStatus(null);
-
-              if (tab === "QUEUE") {
-                setDate(today);
-              } else {
-                setDate(null);
-              }
-            }}
-            className={`px-4 py-2 rounded ${
-              activeTab === tab ? "bg-[#D17C51] text-white" : "bg-gray-200"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+        <div className="flex gap-4 mt-4">
+          {["BOOKING", "QUEUE"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => {
+                setActiveTab(tab);
+                setStatus(null);
+                if (tab === "QUEUE") {
+                  setDate(today);
+                } else {
+                  setDate(null);
+                }
+              }}
+              className={`px-4 py-2 rounded ${
+                activeTab === tab ? "bg-[#D17C51] text-white" : "bg-gray-200"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
         {/* FILTERS */}
         <div className="flex gap-4 items-center">
           {activeTab === "QUEUE" && (
@@ -219,13 +221,10 @@ const ShopRegistration = () => {
               { value: "ENDED", label: "Ended" },
             ]}
           />
-
-     
         </div>
       </div>
 
       {/* TABS */}
-     
 
       {/* TABLE */}
       <div className="mt-4 rounded-md overflow-hidden">
@@ -236,10 +235,9 @@ const ShopRegistration = () => {
           pagination={false}
           rowClassName="border-b border-gray-300"
           scroll={{ x: 800 }}
+          loading={isLoading || isFetching}
         />
       </div>
-
-
 
       <Modal
         title="Booking Details"

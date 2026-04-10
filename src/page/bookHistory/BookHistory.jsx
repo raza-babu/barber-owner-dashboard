@@ -37,7 +37,7 @@ const BookHistory = () => {
 
   // ✅ STATES
   const [activeTab, setActiveTab] = useState("ALL");
-  const [status, setStatus] = useState("COMPLETED"); // ✅ default always COMPLETED
+  const [status, setStatus] = useState(""); // ✅ default always COMPLETED
   const [date, setDate] = useState(null);
 
   const pageSize = 10;
