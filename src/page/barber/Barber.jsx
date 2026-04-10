@@ -4,12 +4,14 @@ import { Navigate } from "../../Navigate";
 import { Link } from "react-router-dom";
 import { useGetAllBarberOwnerQuery } from "../redux/api/manageApi";
 import { useState } from "react";
+import useDebounce from "../../hooks/useDebounce";
 
 export const Barber = () => {
-  const [searchTerm, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const pageSize = 10;
+  const { searchTerm } = useDebounce({ searchQuery, setCurrentPage }); //debounce handled
   const {
     data: barberData,
     isLoading,
@@ -76,8 +78,7 @@ export const Barber = () => {
         </div>
         <Input
           onChange={(e) => {
-            setSearch(e.target.value);
-            setCurrentPage(1);
+            setSearchQuery(e.target.value);
           }}
           placeholder="Search"
           prefix={<SearchOutlined />}

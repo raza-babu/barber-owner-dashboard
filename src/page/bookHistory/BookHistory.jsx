@@ -17,9 +17,10 @@ import { Navigate } from "../../Navigate";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { useGetAllCustomerOwnerQuery } from "../redux/api/manageApi";
+import useDebounce from "../../hooks/useDebounce";
 
 const BookHistory = () => {
-  const [searchTerm, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -41,6 +42,7 @@ const BookHistory = () => {
 
   const pageSize = 10;
 
+  const { searchTerm } = useDebounce({ searchQuery, setCurrentPage }); //debounce handled
   // ✅ API QUERY
   const {
     data: customerData,
@@ -161,7 +163,7 @@ const BookHistory = () => {
             value={status}
             onChange={(value) => {
               setStatus(value);
-              setCurrentPage(1)
+              setCurrentPage(1);
             }}
             style={{ width: 160, height: 42 }}
             options={[
@@ -176,8 +178,7 @@ const BookHistory = () => {
             placeholder="Search"
             prefix={<SearchOutlined />}
             onChange={(e) => {
-              setSearch(e.target.value);
-              setCurrentPage(1);
+              setSearchQuery(e.target.value);
             }}
             style={{ width: 160, height: 42 }}
           />

@@ -17,6 +17,7 @@ const businessApi = baseApi.injectEndpoints({
     getAllCustomerOwner: builder.query({
       query: ({ page, limit, searchTerm, date, status, type }) => {
         const params = new URLSearchParams();
+        console.log(date);
 
         if (page) params.append("page", page);
         if (limit) params.append("limit", limit);
@@ -26,8 +27,9 @@ const businessApi = baseApi.injectEndpoints({
         if (type) params.append("type", type);
 
         return {
-          url: `/bookings/list?${params.toString()}`,
+          url: `/bookings/list`,
           method: "GET",
+          params,
         };
       },
       providesTags: [TagTypes.customerOwners],
@@ -82,7 +84,7 @@ const businessApi = baseApi.injectEndpoints({
           body,
         };
       },
-      invalidatesTags: ["updateProfile"],
+      invalidatesTags: [TagTypes.customerOwners],
     }),
 
     getAllBarberOwner: builder.query({

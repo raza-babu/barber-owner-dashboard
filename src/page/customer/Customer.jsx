@@ -22,17 +22,27 @@ import {
 } from "../redux/api/manageApi";
 import { Link } from "react-router-dom";
 import { BiMessageRoundedDots } from "react-icons/bi";
-const STATUS_OPTIONS = [
-  { value: "PENDING", label: "Pending" },
-  { value: "CONFIRMED", label: "Confirmed" },
+import useDebounce from "../../hooks/useDebounce";
+
+const BOOKING_STATUS_OPTIONS = [
+  // { value: "PENDING", label: "Pending" },
+  // { value: "CONFIRMED", label: "Confirmed" },
   { value: "CANCELLED", label: "Cancelled" },
   { value: "COMPLETED", label: "Completed" },
   { value: "RESCHEDULED", label: "Rescheduled" },
 ];
 
+const QUEUE_STATUS_OPTIONS2 = [
+  // { value: "PENDING", label: "Pending" },
+  // { value: "CONFIRMED", label: "Confirmed" },
+  { value: "CANCELLED", label: "Cancelled" },
+  { value: "COMPLETED", label: "Completed" },
+  // { value: "RESCHEDULED", label: "Rescheduled" },
+];
+
 const Customer = () => {
   const today = dayjs().format("YYYY-MM-DD");
-  const [searchTerm, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [updateStatus] = useUpdateStatusCustomerMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,10 +60,11 @@ const Customer = () => {
 
   const [activeTab, setActiveTab] = useState("BOOKING");
   const [status, setStatus] = useState(null);
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState("");
 
   const pageSize = 10;
 
+  const { searchTerm } = useDebounce({ searchQuery, setCurrentPage }); //debounce handled
   // ✅ API QUERY PARAMS
   const {
     data: customerData,
@@ -153,7 +164,11 @@ const Customer = () => {
         <Select
           value={status}
           style={{ width: 150 }}
-          options={STATUS_OPTIONS}
+          options={
+            activeTab === "BOOKING"
+              ? BOOKING_STATUS_OPTIONS
+              : QUEUE_STATUS_OPTIONS2
+          }
           onChange={(value) => handleStatusChange(record.bookingId, value)}
         />
       ),
@@ -224,8 +239,7 @@ const Customer = () => {
           {/* Search */}
           <Input
             onChange={(e) => {
-              setSearch(e.target.value);
-              setCurrentPage(1);
+              setSearchQuery(e.target.value);
             }}
             placeholder="Search"
             prefix={<SearchOutlined />}
