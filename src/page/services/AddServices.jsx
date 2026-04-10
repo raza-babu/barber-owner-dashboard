@@ -1,14 +1,9 @@
-import {
-  Form,
-  Modal,
-  Input,
-  Select,
-  message,
-} from "antd";
+import { Form, Modal, Input, Select, message } from "antd";
 import { useAddServicesOwnerMutation } from "../redux/api/manageApi";
+import { CgSpinner } from "react-icons/cg";
 
 const AddServices = ({ openAddModal, setOpenAddModal }) => {
-  const [addServices] = useAddServicesOwnerMutation()
+  const [addServices, { isLoading }] = useAddServicesOwnerMutation();
   const [form] = Form.useForm();
   const handleCancel = () => {
     form.resetFields();
@@ -17,7 +12,7 @@ const AddServices = ({ openAddModal, setOpenAddModal }) => {
   };
 
   const handleSubmit = async (values) => {
-       const data = {
+    const data = {
       duration: Number(values?.duration),
       price: Number(values?.price),
       availableTo: values?.availableTo,
@@ -42,9 +37,7 @@ const AddServices = ({ openAddModal, setOpenAddModal }) => {
       width={400}
     >
       <div className="mb-6 mt-2">
-        <h2 className="text-center font-semibold text-xl mb-4">
-          Add Services
-        </h2>
+        <h2 className="text-center font-semibold text-xl mb-4">Add Services</h2>
 
         <Form
           form={form}
@@ -58,55 +51,58 @@ const AddServices = ({ openAddModal, setOpenAddModal }) => {
               className="w-full"
               style={{ height: 40 }}
             />
-            </Form.Item>
-            <div className="mt-4">  <Form.Item
-                          label="Services Available To"
-                          name="availableTo"
-                          rules={[
-                            { required: true, message: "Please input availableTo!" },
-                          ]}
-                        >
-                          <Select
-                            style={{ height: "48px" }}
-                            placeholder="Select Available"
-                            className="w-full"
-                          >
-                            <Option value="Select Available">Select</Option>
-                            <Option value="EVERYONE">EVERYONE</Option>
-                            <Option value="MALE">MALE</Option>
-                            <Option value="FEMALE">FEMALE</Option>
-                     
-                          </Select>
-                        </Form.Item></div>
-
-
-
-          {/* Date, Time, Duration */}
-          <div className="grid grid-cols-3 gap-2 mt-3 mb-4">
-            <Form.Item  label="Duration" name="duration" className="mb-0">
-              <Input
-              placeholder="Duration"
-              className="w-full"
-              style={{ height: 40 }}
-            />
-            </Form.Item>
-            <Form.Item label="Price" name="price" className="mb-0">
-               <Input
-               type="number"
-              placeholder="Price"
-              className="w-full"
-              style={{ height: 40 }}
-            />
+          </Form.Item>
+          <div className="mt-4">
+            {" "}
+            <Form.Item
+              label="Services Available To"
+              name="availableTo"
+              rules={[{ required: true, message: "Please input availableTo!" }]}
+            >
+              <Select
+                style={{ height: "48px" }}
+                placeholder="Select Available"
+                className="w-full"
+              >
+                <Option value="Select Available">Select</Option>
+                <Option value="EVERYONE">EVERYONE</Option>
+                <Option value="MALE">MALE</Option>
+                <Option value="FEMALE">FEMALE</Option>
+              </Select>
             </Form.Item>
           </div>
 
-       
+          {/* Date, Time, Duration */}
+          <div className="grid grid-cols-3 gap-2 mt-3 mb-4">
+            <Form.Item label="Duration" name="duration" className="mb-0">
+              <Input
+                placeholder="Duration"
+                className="w-full"
+                style={{ height: 40 }}
+              />
+            </Form.Item>
+            <Form.Item label="Price" name="price" className="mb-0">
+              <Input
+                type="number"
+                placeholder="Price"
+                className="w-full"
+                style={{ height: 40 }}
+              />
+            </Form.Item>
+          </div>
 
           <button
             type="submit"
-            className="w-full py-2 mt-2 bg-[#D17C51] text-white rounded-md"
+            className="w-full flex justify-center items-center gap-2 py-2 mt-2 bg-[#D17C51] text-white rounded-md cursor-pointer"
           >
-            Save
+            {isLoading ? (
+              <>
+                <CgSpinner size={18} className="animate-spin" />
+                Processing...
+              </>
+            ) : (
+              "Save"
+            )}
           </button>
         </Form>
       </div>

@@ -87,7 +87,7 @@ const Schedule = () => {
         <Navigate title={"Appointment Date"} />
         {status === "QUEUE" && (
           <button
-            className="bg-[#D17C51] px-3 py-2 rounded text-white mb-4"
+            className="bg-[#D17C51] px-3 py-2 rounded text-white mb-4 cursor-pointer"
             onClick={() => setOpenAddModal(true)}
           >
             Add Queue

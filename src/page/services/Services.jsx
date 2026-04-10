@@ -8,13 +8,19 @@ import {
   useDeleteServicesOwnerMutation,
   useGetAllServicesOwnerQuery,
 } from "../redux/api/manageApi";
+import useDebounce from "../../hooks/useDebounce";
 
 const Services = () => {
-  const [searchTerm, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
-  const { data: services, isLoading } = useGetAllServicesOwnerQuery({
+  const { searchTerm } = useDebounce({ searchQuery, setCurrentPage }); //debounce handled
+  const {
+    data: services,
+    isLoading,
+    isFetching,
+  } = useGetAllServicesOwnerQuery({
     searchTerm,
     page: currentPage,
     limit: pageSize,
@@ -28,6 +34,8 @@ const Services = () => {
     setSelectedUser(record);
     setEditModal(true);
   };
+
+  const meta = services?.meta || {};
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -84,10 +92,10 @@ const Services = () => {
       <div className="md:flex justify-between mb-4">
         <Navigate title={"Services"} />
         <Input
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search"
           prefix={<SearchOutlined />}
-           style={{ width: 250, height: "42px" }}
+          style={{ width: 250, height: "42px" }}
         />
       </div>
 
@@ -102,20 +110,22 @@ const Services = () => {
         columns={columns}
         dataSource={services?.data}
         rowKey="id"
-        loading={isLoading}
+        loading={isLoading || isFetching}
         pagination={false}
         scroll={{ x: 900 }}
       />
 
-      <div className="mt-4 flex justify-center">
-        <Pagination
-          current={currentPage}
-          pageSize={pageSize}
-          total={services?.meta?.total || 0}
-          onChange={handlePageChange}
-          showSizeChanger={false}
-        />
-      </div>
+      {meta?.totalPages > 1 && (
+        <div className="mt-4 flex justify-center">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={services?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+          />
+        </div>
+      )}
 
       <AddServices
         openAddModal={openAddModal}

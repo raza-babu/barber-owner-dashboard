@@ -112,7 +112,7 @@ const businessApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["updateProfile"],
+      providesTags: [TagTypes.servicesOwner],
     }),
 
     getAllServicesOwnerSelect: builder.query({
@@ -171,7 +171,7 @@ const businessApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["updateProfile"],
+      invalidatesTags: [TagTypes.servicesOwner],
     }),
     deleteServicesOwner: builder.mutation({
       query: (id) => {
@@ -180,7 +180,7 @@ const businessApi = baseApi.injectEndpoints({
           method: "DELETE",
         };
       },
-      invalidatesTags: ["updateProfile"],
+      invalidatesTags: [TagTypes.servicesOwner],
     }),
 
     getSingleSheduale: builder.query({
@@ -221,7 +221,7 @@ const businessApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ["updateProfile"],
+      invalidatesTags: [TagTypes.servicesOwner],
     }),
 
     // old
