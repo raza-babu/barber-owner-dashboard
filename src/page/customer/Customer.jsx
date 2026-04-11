@@ -169,27 +169,46 @@ const Customer = () => {
             className="border px-3 py-1 border-gray-300 rounded-md"
             onChange={(value) => handleStatusChange(record.bookingId, value)}
           >
-            {record?.remoteQueue
-              ? STATUS_OPTIONS.map((item) => (
-                  <option
-                    key={item.value}
-                    value={item.value}
-                    // disabled={item.value === "PENDING" || item.value === status}
-                    hidden={item.value === "PENDING" || item.value === status}
-                  >
-                    {item.label}
-                  </option>
-                ))
-              : QUEUE_STATUS_OPTIONS.map((item) => (
-                  <option
-                    key={item.value}
-                    value={item.value}
-                    // disabled={item.value === "PENDING" || item.value === status}
-                    hidden={item.value === "PENDING" || item.value === status}
-                  >
-                    {item.label}
-                  </option>
-                ))}
+            {activeTab === "BOOKING" ? (
+              STATUS_OPTIONS.map((item) => (
+                <option
+                  key={item.value}
+                  value={item.value}
+                  // disabled={item.value === "PENDING" || item.value === status}
+                  hidden={item.value === "PENDING" || item.value === status}
+                >
+                  {item.label}
+                </option>
+              ))
+            ) : (
+              <>
+                {record?.remoteQueue
+                  ? STATUS_OPTIONS.map((item) => (
+                      <option
+                        key={item.value}
+                        value={item.value}
+                        // disabled={item.value === "PENDING" || item.value === status}
+                        hidden={
+                          item.value === "PENDING" || item.value === status
+                        }
+                      >
+                        {item.label}
+                      </option>
+                    ))
+                  : QUEUE_STATUS_OPTIONS.map((item) => (
+                      <option
+                        key={item.value}
+                        value={item.value}
+                        // disabled={item.value === "PENDING" || item.value === status}
+                        hidden={
+                          item.value === "PENDING" || item.value === status
+                        }
+                      >
+                        {item.label}
+                      </option>
+                    ))}
+              </>
+            )}
           </select>
         </>
       ),
