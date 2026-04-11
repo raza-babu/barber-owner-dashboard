@@ -20,13 +20,23 @@ import {
   useGetAllCustomerOwnerQuery,
   useUpdateStatusCustomerMutation,
 } from "../../page/redux/api/manageApi";
+
 const STATUS_OPTIONS = [
-  // { value: "PENDING", label: "Pending" },
+  { value: "PENDING", label: "Pending" },
   // { value: "CONFIRMED", label: "Confirmed" },
   { value: "CANCELLED", label: "Cancelled" },
   { value: "COMPLETED", label: "Completed" },
   { value: "NO_SHOW", label: "No show" },
 ];
+
+const QUEUE_STATUS_OPTIONS = [
+  { value: "PENDING", label: "Pending" },
+  { value: "CONFIRMED", label: "Confirmed" },
+  { value: "CANCELLED", label: "Cancelled" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "NO_SHOW", label: "No show" },
+];
+
 const ShopRegistration = () => {
   const today = dayjs().format("YYYY-MM-DD");
   const [updateStatus] = useUpdateStatusCustomerMutation();
@@ -133,12 +143,37 @@ const ShopRegistration = () => {
       dataIndex: "status",
       key: "status",
       render: (status, record) => (
-        <Select
-          value={status}
-          style={{ width: 150 }}
-          options={STATUS_OPTIONS}
-          onChange={(value) => handleStatusChange(record.bookingId, value)}
-        />
+        <>
+          <select
+            value={status}
+            name=""
+            id=""
+            className="border px-3 py-1 border-gray-300 rounded-md"
+            onChange={(value) => handleStatusChange(record.bookingId, value)}
+          >
+            {record?.remoteQueue
+              ? STATUS_OPTIONS.map((item) => (
+                  <option
+                    key={item.value}
+                    value={item.value}
+                    // disabled={item.value === "PENDING" || item.value === status}
+                    hidden={item.value === "PENDING" || item.value === status}
+                  >
+                    {item.label}
+                  </option>
+                ))
+              : QUEUE_STATUS_OPTIONS.map((item) => (
+                  <option
+                    key={item.value}
+                    value={item.value}
+                    // disabled={item.value === "PENDING" || item.value === status}
+                    hidden={item.value === "PENDING" || item.value === status}
+                  >
+                    {item.label}
+                  </option>
+                ))}
+          </select>
+        </>
       ),
     },
     {
@@ -295,7 +330,7 @@ const ShopRegistration = () => {
               </Descriptions.Item>
 
               <Descriptions.Item label="Total Price" span={2}>
-                ${selectedBooking.totalPrice}
+                £{selectedBooking.totalPrice}
               </Descriptions.Item>
             </Descriptions>
 

@@ -280,7 +280,7 @@ const BookHistory = () => {
                 {selectedBooking.startTime} - {selectedBooking.endTime}
               </Descriptions.Item>
               <Descriptions.Item label="Total Price" span={2}>
-                ${selectedBooking.totalPrice}
+                £{selectedBooking.totalPrice}
               </Descriptions.Item>
               {selectedBooking.notes && (
                 <Descriptions.Item label="Notes" span={2}>
