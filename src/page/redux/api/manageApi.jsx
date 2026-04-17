@@ -17,7 +17,6 @@ const businessApi = baseApi.injectEndpoints({
     getAllCustomerOwner: builder.query({
       query: ({ page, limit, searchTerm, date, status, type }) => {
         const params = new URLSearchParams();
-        console.log(date);
 
         if (page) params.append("page", page);
         if (limit) params.append("limit", limit);

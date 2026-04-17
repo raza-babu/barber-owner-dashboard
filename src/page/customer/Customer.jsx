@@ -4,7 +4,6 @@ import {
   Pagination,
   Select,
   DatePicker,
-  message,
   Modal,
   Button,
   Descriptions,
@@ -16,13 +15,11 @@ import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
 import { Navigate } from "../../Navigate";
 import { useState } from "react";
 import dayjs from "dayjs";
-import {
-  useGetAllCustomerOwnerQuery,
-  useUpdateStatusCustomerMutation,
-} from "../redux/api/manageApi";
+import { useGetAllCustomerOwnerQuery } from "../redux/api/manageApi";
 import { Link } from "react-router-dom";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import useDebounce from "../../hooks/useDebounce";
+import ChangeStatusModal from "../../components/modal/ChangeStatusModal";
 
 const STATUS_OPTIONS = [
   { value: "PENDING", label: "Pending" },
@@ -44,9 +41,16 @@ const Customer = () => {
   const today = dayjs().format("YYYY-MM-DD");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [updateStatus] = useUpdateStatusCustomerMutation();
+  //const [updateStatus] = useUpdateStatusCustomerMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [activeTab, setActiveTab] = useState("BOOKING");
+  const [status, setStatus] = useState(null);
+  const [date, setDate] = useState("");
+  const [bookingId, setBookingId] = useState("");
+  const [updatedStatus, setUpdatedStatus] = useState("");
+  const [statusTitle, setStatusTitle] = useState("");
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
 
   const openModal = (record) => {
     setSelectedBooking(record);
@@ -57,10 +61,6 @@ const Customer = () => {
     setIsModalOpen(false);
     setSelectedBooking(null);
   };
-
-  const [activeTab, setActiveTab] = useState("BOOKING");
-  const [status, setStatus] = useState(null);
-  const [date, setDate] = useState("");
 
   const pageSize = 10;
 
@@ -82,15 +82,31 @@ const Customer = () => {
     setCurrentPage(page);
   };
   const handleStatusChange = async (bookingId, status) => {
-    try {
-      const res = await updateStatus({
-        bookingId,
-        status,
-      }).unwrap();
-      message.success(res?.message);
-    } catch (error) {
-      message.error(error?.data?.message);
+    setBookingId(bookingId);
+    setUpdatedStatus(status);
+    if (status === "CANCELLED") {
+      setStatusTitle("cancel");
     }
+    if (status === "CONFIRMED") {
+      setStatusTitle("confirm");
+    }
+    if (status === "NO_SHOW") {
+      setStatusTitle("hide");
+    }
+    if (status === "COMPLETED") {
+      setStatusTitle("complete");
+    }
+    setStatusModalOpen(true);
+
+    // try {
+    //   const res = await updateStatus({
+    //     bookingId,
+    //     status,
+    //   }).unwrap();
+    //   message.success(res?.message);
+    // } catch (error) {
+    //   message.error(error?.data?.message);
+    // }
   };
 
   const meta = customerData?.meta;
@@ -167,7 +183,8 @@ const Customer = () => {
             name=""
             id=""
             className="border px-3 py-1 border-gray-300 rounded-md"
-            onChange={(value) => handleStatusChange(record.bookingId, value)}
+            onChange={(e) => handleStatusChange(record.bookingId, e.target.value)}
+            disabled={status === "CANCELLED"}
           >
             {activeTab === "BOOKING" ? (
               STATUS_OPTIONS.map((item) => (
@@ -238,194 +255,203 @@ const Customer = () => {
 
   const tableData = customerData?.data || [];
 
-  console.log(customerData?.data);
-
   return (
-    <div className="bg-white p-3 h-[87vh]">
-      {/* HEADER */}
-      <div className="md:flex justify-between items-center">
-        <div className="flex items-center">
-          <Navigate title="Customers" />
-        </div>
+    <>
+      <div className="bg-white p-3 h-[87vh]">
+        {/* HEADER */}
+        <div className="md:flex justify-between items-center">
+          <div className="flex items-center">
+            <Navigate title="Customers" />
+          </div>
 
-        {/* FILTERS */}
-        <div className="flex gap-4 items-center">
-          {activeTab === "QUEUE" && (
-            <DatePicker
-              value={date ? dayjs(date) : null}
+          {/* FILTERS */}
+          <div className="flex gap-4 items-center">
+            {activeTab === "QUEUE" && (
+              <DatePicker
+                value={date ? dayjs(date) : null}
+                onChange={(value) => {
+                  setDate(value ? dayjs(value).format("YYYY-MM-DD") : null);
+                  setCurrentPage(1);
+                }}
+              />
+            )}
+
+            {/* Status Select */}
+            <Select
+              value={status}
               onChange={(value) => {
-                setDate(value ? dayjs(value).format("YYYY-MM-DD") : null);
+                setStatus(value || null);
                 setCurrentPage(1);
               }}
+              allowClear
+              placeholder="Status"
+              style={{ width: 150, height: "42px" }}
+              options={[
+                { value: "PENDING", label: "Pending" },
+                { value: "STARTED", label: "Started" },
+                { value: "CONFIRMED", label: "Confirmed" },
+                { value: "ENDED", label: "Ended" },
+              ]}
             />
-          )}
 
-          {/* Status Select */}
-          <Select
-            value={status}
-            onChange={(value) => {
-              setStatus(value || null);
-              setCurrentPage(1);
-            }}
-            allowClear
-            placeholder="Status"
-            style={{ width: 150, height: "42px" }}
-            options={[
-              { value: "PENDING", label: "Pending" },
-              { value: "STARTED", label: "Started" },
-              { value: "CONFIRMED", label: "Confirmed" },
-              { value: "ENDED", label: "Ended" },
-            ]}
-          />
+            {/* Search */}
+            <Input
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}
+              placeholder="Search"
+              prefix={<SearchOutlined />}
+              style={{ width: 150, height: "42px" }}
+            />
+          </div>
+        </div>
 
-          {/* Search */}
-          <Input
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-            }}
-            placeholder="Search"
-            prefix={<SearchOutlined />}
-            style={{ width: 150, height: "42px" }}
+        {/* TABS */}
+        <div className="flex gap-4 mt-4">
+          {["BOOKING", "QUEUE"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => {
+                setActiveTab(tab);
+                setCurrentPage(1);
+                setStatus(null);
+
+                if (tab === "QUEUE") {
+                  setDate(today);
+                } else {
+                  setDate(null);
+                }
+              }}
+              className={`px-4 py-2 rounded ${
+                activeTab === tab ? "bg-[#D17C51] text-white" : "bg-gray-200"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* TABLE */}
+        <div className="mt-4 rounded-md overflow-hidden">
+          <Table
+            columns={columns}
+            dataSource={tableData}
+            rowKey="bookingId"
+            pagination={false}
+            rowClassName="border-b border-gray-300"
+            scroll={{ x: 800 }}
+            loading={isLoading || isFetching}
           />
         </div>
-      </div>
 
-      {/* TABS */}
-      <div className="flex gap-4 mt-4">
-        {["BOOKING", "QUEUE"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => {
-              setActiveTab(tab);
-              setCurrentPage(1);
-              setStatus(null);
-
-              if (tab === "QUEUE") {
-                setDate(today);
-              } else {
-                setDate(null);
-              }
-            }}
-            className={`px-4 py-2 rounded ${
-              activeTab === tab ? "bg-[#D17C51] text-white" : "bg-gray-200"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* TABLE */}
-      <div className="mt-4 rounded-md overflow-hidden">
-        <Table
-          columns={columns}
-          dataSource={tableData}
-          rowKey="bookingId"
-          pagination={false}
-          rowClassName="border-b border-gray-300"
-          scroll={{ x: 800 }}
-          loading={isLoading || isFetching}
-        />
-      </div>
-
-      {/* PAGINATION */}
-      {meta?.totalPages > 1 && (
-        <div className="mt-4 flex justify-center">
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={customerData?.meta?.total || 0}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-          />
-        </div>
-      )}
-
-      <Modal
-        title="Booking Details"
-        open={isModalOpen}
-        onCancel={closeModal}
-        footer={null}
-        width={700}
-      >
-        {selectedBooking && (
-          <>
-            {/* CUSTOMER & BARBER */}
-            <div className="flex justify-between gap-6">
-              <div className="flex items-center gap-3">
-                <Avatar size={64} src={selectedBooking.customerImage} />
-                <div>
-                  <p className="font-semibold">
-                    {selectedBooking.customerName}
-                  </p>
-                  <p className="text-gray-500 text-sm">
-                    {selectedBooking.customerEmail}
-                  </p>
-                  <p className="text-gray-500 text-sm">
-                    {selectedBooking.customerPhone}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Avatar size={64} src={selectedBooking.barberImage} />
-                <div>
-                  <p className="font-semibold">{selectedBooking.barberName}</p>
-                  <p className="text-gray-500 text-sm">Barber</p>
-                </div>
-              </div>
-            </div>
-
-            <Divider />
-
-            {/* BOOKING INFO */}
-            <Descriptions bordered size="small" column={2}>
-              <Descriptions.Item label="Booking Date">
-                {new Date(selectedBooking.bookingDate).toLocaleDateString()}
-              </Descriptions.Item>
-
-              <Descriptions.Item label="Time">
-                {selectedBooking.startTime} - {selectedBooking.endTime}
-              </Descriptions.Item>
-
-              <Descriptions.Item label="Booking Type">
-                {selectedBooking.bookingType}
-              </Descriptions.Item>
-
-              <Descriptions.Item label="Status">
-                {selectedBooking.status}
-              </Descriptions.Item>
-
-              <Descriptions.Item label="Total Price" span={2}>
-                £{selectedBooking.totalPrice}
-              </Descriptions.Item>
-            </Descriptions>
-
-            <Divider />
-
-            {/* SERVICES LIST */}
-            <h3 className="font-semibold mb-2">Services</h3>
-            <List
-              bordered
-              dataSource={selectedBooking.services}
-              renderItem={(service) => (
-                <List.Item>
-                  <div className="flex justify-between w-full">
-                    <div>
-                      <p className="font-medium">{service.serviceName}</p>
-                      <p className="text-sm text-gray-500">
-                        Available To: {service.availableTo}
-                      </p>
-                    </div>
-                    <p className="font-semibold">{service.price}</p>
-                  </div>
-                </List.Item>
-              )}
+        {/* PAGINATION */}
+        {meta?.totalPages > 1 && (
+          <div className="mt-4 flex justify-center">
+            <Pagination
+              current={currentPage}
+              pageSize={pageSize}
+              total={customerData?.meta?.total || 0}
+              onChange={handlePageChange}
+              showSizeChanger={false}
             />
-          </>
+          </div>
         )}
-      </Modal>
-    </div>
+
+        <Modal
+          title="Booking Details"
+          open={isModalOpen}
+          onCancel={closeModal}
+          footer={null}
+          width={700}
+        >
+          {selectedBooking && (
+            <>
+              {/* CUSTOMER & BARBER */}
+              <div className="flex justify-between gap-6">
+                <div className="flex items-center gap-3">
+                  <Avatar size={64} src={selectedBooking.customerImage} />
+                  <div>
+                    <p className="font-semibold">
+                      {selectedBooking.customerName}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      {selectedBooking.customerEmail}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      {selectedBooking.customerPhone}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Avatar size={64} src={selectedBooking.barberImage} />
+                  <div>
+                    <p className="font-semibold">
+                      {selectedBooking.barberName}
+                    </p>
+                    <p className="text-gray-500 text-sm">Barber</p>
+                  </div>
+                </div>
+              </div>
+
+              <Divider />
+
+              {/* BOOKING INFO */}
+              <Descriptions bordered size="small" column={2}>
+                <Descriptions.Item label="Booking Date">
+                  {new Date(selectedBooking.bookingDate).toLocaleDateString()}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Time">
+                  {selectedBooking.startTime} - {selectedBooking.endTime}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Booking Type">
+                  {selectedBooking.bookingType}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Status">
+                  {selectedBooking.status}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Total Price" span={2}>
+                  £{selectedBooking.totalPrice}
+                </Descriptions.Item>
+              </Descriptions>
+
+              <Divider />
+
+              {/* SERVICES LIST */}
+              <h3 className="font-semibold mb-2">Services</h3>
+              <List
+                bordered
+                dataSource={selectedBooking.services}
+                renderItem={(service) => (
+                  <List.Item>
+                    <div className="flex justify-between w-full">
+                      <div>
+                        <p className="font-medium">{service.serviceName}</p>
+                        <p className="text-sm text-gray-500">
+                          Available To: {service.availableTo}
+                        </p>
+                      </div>
+                      <p className="font-semibold">{service.price}</p>
+                    </div>
+                  </List.Item>
+                )}
+              />
+            </>
+          )}
+        </Modal>
+      </div>
+      <ChangeStatusModal
+        statusModalOpen={statusModalOpen}
+        setStatusModalOpen={setStatusModalOpen}
+        bookingId={bookingId}
+        updatedStatus={updatedStatus}
+        statusTitle={statusTitle}
+      />
+    </>
   );
 };
 
