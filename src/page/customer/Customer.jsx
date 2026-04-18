@@ -23,7 +23,6 @@ import ChangeStatusModal from "../../components/modal/ChangeStatusModal";
 
 const STATUS_OPTIONS = [
   { value: "PENDING", label: "Pending" },
-  // { value: "CONFIRMED", label: "Confirmed" },
   { value: "CANCELLED", label: "Cancelled" },
   { value: "COMPLETED", label: "Completed" },
   { value: "NO_SHOW", label: "No show" },
