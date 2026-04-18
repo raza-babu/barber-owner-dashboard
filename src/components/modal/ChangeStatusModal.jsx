@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { message, Modal } from "antd";
-import { useEffect } from "react";
 import { FiEdit } from "react-icons/fi";
 import { useUpdateStatusCustomerMutation } from "../../page/redux/api/manageApi";
 import { CgSpinnerTwo } from "react-icons/cg";
@@ -9,32 +7,19 @@ const ChangeStatusModal = ({
   statusModalOpen,
   setStatusModalOpen,
   bookingId,
-  status,
+  updatedStatus,
   statusTitle,
 }) => {
-  //const [modalOpen, setModalOpen] = useState(false);
-  const [updateStatus, { isLoading, isSuccess }] =
-    useUpdateStatusCustomerMutation();
-
-  useEffect(() => {
-    if (isSuccess) {
-      setStatusModalOpen(false);
-    }
-  }, [isSuccess]);
+  const [updateStatus, { isLoading }] = useUpdateStatusCustomerMutation();
 
   const handleClick = async () => {
-    // changeStatus({
-    //   id: userId,
-    //   data: {
-    //     status: status === "blocked" ? "unblocked" : "blocked",
-    //   },
-    // });
     try {
       const res = await updateStatus({
         bookingId,
-        status,
+        status: updatedStatus,
       }).unwrap();
       message.success(res?.message);
+      setStatusModalOpen(false);
     } catch (error) {
       message.error(error?.data?.message);
     }
@@ -61,7 +46,7 @@ const ChangeStatusModal = ({
         <div className="flex justify-end px-4 gap-x-3">
           <button
             onClick={() => setStatusModalOpen(false)}
-            className="bg-black text-white px-4 py-2 rounded-md"
+            className="bg-black text-white px-4 py-2 rounded-md cursor-pointer"
           >
             No
           </button>

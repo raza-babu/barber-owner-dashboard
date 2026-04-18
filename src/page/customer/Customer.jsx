@@ -41,7 +41,6 @@ const Customer = () => {
   const today = dayjs().format("YYYY-MM-DD");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  //const [updateStatus] = useUpdateStatusCustomerMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [activeTab, setActiveTab] = useState("BOOKING");
@@ -97,16 +96,6 @@ const Customer = () => {
       setStatusTitle("complete");
     }
     setStatusModalOpen(true);
-
-    // try {
-    //   const res = await updateStatus({
-    //     bookingId,
-    //     status,
-    //   }).unwrap();
-    //   message.success(res?.message);
-    // } catch (error) {
-    //   message.error(error?.data?.message);
-    // }
   };
 
   const meta = customerData?.meta;
@@ -180,9 +169,7 @@ const Customer = () => {
         <>
           <select
             value={status}
-            name=""
-            id=""
-            className="border px-3 py-1 border-gray-300 rounded-md"
+            className="border px-3 py-1 border-gray-300 rounded-md disabled:cursor-not-allowed"
             onChange={(e) => handleStatusChange(record.bookingId, e.target.value)}
             disabled={status === "CANCELLED"}
           >
