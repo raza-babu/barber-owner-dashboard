@@ -14,7 +14,7 @@ import { RiBookletLine } from "react-icons/ri";
 import { LiaUserTieSolid } from "react-icons/lia";
 import { CiCoinInsert } from "react-icons/ci";
 import { useGetProfileQuery } from "../../page/redux/api/manageApi";
-
+import { AppWindow } from "lucide-react";
 
 const items = [
   {
@@ -49,18 +49,24 @@ const items = [
     link: "/dashboard/barber",
   },
   {
+    key: "applications",
+    label: "Applications",
+    icon: <AppWindow />,
+    link: "/dashboard/applications",
+  },
+  {
     key: "history",
     label: "History",
     icon: <RiBookletLine />,
     link: "/dashboard/bookingHistory",
   },
-    {
+  {
     key: "schedual",
     label: "Schedule Management",
     icon: <CiCoinInsert />,
     link: "/dashboard/schedualManagement",
   },
-   {
+  {
     key: "schedualDate",
     label: "Upcoming Dates",
     icon: <CiCoinInsert />,
@@ -78,7 +84,7 @@ const items = [
     icon: <CiCoinInsert />,
     link: "/dashboard/transaction",
   },
-   {
+  {
     key: "profile",
     label: "Profile",
     icon: <MdOutlineSettings />,
@@ -117,7 +123,7 @@ const items = [
   //       label: "FAQ",
   //       link: "/dashboard/Settings/FAQ",
   //     },
-      
+
   //   ],
   // },
 ];
@@ -126,18 +132,15 @@ const Header = () => {
   const [selectedKey, setSelectedKey] = useState("dashboard");
   const [expandedKeys, setExpandedKeys] = useState([]);
   const navigate = useNavigate();
-   const { data: profileData } = useGetProfileQuery();
+  const { data: profileData } = useGetProfileQuery();
 
   const contentRef = useRef({});
-  
 
   const onParentClick = (key) => {
     setExpandedKeys((prev) =>
-      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
+      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key],
     );
   };
-
- 
 
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState("left");
@@ -191,31 +194,30 @@ const Header = () => {
                 </div>
 
                 <div className="menu-items">
-                {items.map((item) => (
+                  {items.map((item) => (
                     <div key={item.key}>
                       <Link
                         to={item.link}
                         className={`menu-item my-4 mx-2 py-3 px-3 flex items-center cursor-pointer ${
                           selectedKey === item.key
-                           ? "bg-[#D17C51] text-[white] rounded-tr-md rounded-br-md"
-                    : "bg-white text-[#AB684D] rounded-tr-md rounded-br-md hover:bg-gray-200"
+                            ? "bg-[#D17C51] text-[white] rounded-tr-md rounded-br-md"
+                            : "bg-white text-[#AB684D] rounded-tr-md rounded-br-md hover:bg-gray-200"
                         }`}
                         onClick={(e) => {
                           if (item.children) {
-                            e.preventDefault(); 
-                            onParentClick(item.key); 
+                            e.preventDefault();
+                            onParentClick(item.key);
                           } else {
                             setSelectedKey(item.key);
-                            onClose(); 
+                            onClose();
                           }
                         }}
                       >
-                       <h1 className="mr-3">{item.icon}</h1>
+                        <h1 className="mr-3">{item.icon}</h1>
                         <span className="block w-full text-black">
                           {item.label}
                         </span>
 
-                        
                         {item.children && (
                           <FaChevronRight
                             className={`ml-auto transform transition-all duration-300 ${
@@ -245,13 +247,13 @@ const Header = () => {
                               to={child.link}
                               className={`menu-item p-4  flex items-center cursor-pointer ${
                                 selectedKey === child.key
-                                     ? "bg-[#D17C51] text-white"
-                          : "hover:bg-gray-200"
+                                  ? "bg-[#D17C51] text-white"
+                                  : "hover:bg-gray-200"
                               }`}
                               onClick={() => {
-                                setSelectedKey(child.key); 
-                                setExpandedKeys([]); 
-                                onClose(); 
+                                setSelectedKey(child.key);
+                                setExpandedKeys([]);
+                                onClose();
                               }}
                             >
                               <span className="block w-full text-black">
@@ -265,7 +267,6 @@ const Header = () => {
                   ))}
                 </div>
 
-               
                 <div className=" w-full p-2 pt-4 ">
                   <button
                     onClick={handleLogout}

@@ -14,6 +14,7 @@ import {
 import { RiBookletLine } from "react-icons/ri";
 import { LiaUserTieSolid } from "react-icons/lia";
 import { CiCoinInsert } from "react-icons/ci";
+import { AppWindow } from "lucide-react";
 
 const items = [
   {
@@ -50,7 +51,7 @@ const items = [
   {
     key: "applications",
     label: "Applications",
-    icon: <IoMdCut />,
+    icon: <AppWindow />,
     link: "/dashboard/applications",
   },
   {
