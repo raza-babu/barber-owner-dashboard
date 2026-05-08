@@ -17,7 +17,7 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: async (args, api, extraOptions) => {
     const result = await baseQuery(args, api, extraOptions);
-    if (result?.error?.status === 401) {
+    if (result?.error?.status === 401 || result?.error?.status === 403) {
       localStorage.clear();
       message.error("Session Expired");
       window.location.href = "/login";

@@ -4,18 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import { useRef, useState } from "react";
 import { Drawer, Radio, Space } from "antd";
-import dashboard from "../../assets/routerImg/dashboard.png";
-import categorie from "../../assets/routerImg/categorie.png";
-import create from "../../assets/routerImg/create.png";
-import settings from "../../assets/routerImg/settings.png";
-import subscription from "../../assets/routerImg/subscription.png";
-import user from "../../assets/routerImg/user.png";
 import logo from "../../assets/logo.png";
 
 import { FaChevronRight } from "react-icons/fa";
 import { IoIosLogIn, IoMdCut } from "react-icons/io";
 import { TbUserCircle } from "react-icons/tb";
-import { MdOutlineReport, MdOutlineSettings } from "react-icons/md";
+import { MdOutlineSettings } from "react-icons/md";
 import { RiBookletLine } from "react-icons/ri";
 import { LiaUserTieSolid } from "react-icons/lia";
 import { CiCoinInsert } from "react-icons/ci";
@@ -174,7 +168,7 @@ const Header = () => {
         <div className="flex gap-8  px-6">
           <div className="relative">
             <Link to={"/dashboard/Settings/notification"}>
-              <div className="w-[45px] h-[45px] flex items-center justify-center text-xl rounded-full bg-white text-black ">
+              <div className="w-11.25 h-11.25 flex items-center justify-center text-xl rounded-full bg-white text-black ">
                 <span>
                   <LuBell />
                 </span>
@@ -193,7 +187,7 @@ const Header = () => {
             >
               <div className="bg-[#AB684D] custom-sidebar -m-6">
                 <div className="custom-sidebar-logo flex justify-center ">
-                  <img src={logo} alt="Logo" className="w-[40px]" />
+                  <img src={logo} alt="Logo" className="w-10" />
                 </div>
 
                 <div className="menu-items">
@@ -295,7 +289,7 @@ const Header = () => {
             <div className="flex gap-3">
               <div>
                 <img
-                  className="w-[45px] rounded-full h-[45px]"
+                  className="w-11.25 rounded-full h-11.25"
                   src={profileData?.data?.image || profilee}
                   alt="profile"
                 />

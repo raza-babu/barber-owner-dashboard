@@ -1,16 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import logo from "../../assets/header/logo3.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { FaChevronRight, FaUserAstronaut, FaUserTie } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa";
 import { IoIosLogIn, IoMdCut } from "react-icons/io";
 import { logout } from "../../page/redux/features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { TbUserCircle } from "react-icons/tb";
-import { MdOutlineReport, MdOutlineSettings, MdOutlineWorkspacePremium } from "react-icons/md";
-import { RiBookletLine, RiShieldUserLine } from "react-icons/ri";
-import { BsSubstack } from "react-icons/bs";
-import { HiSupport } from "react-icons/hi";
+import {
+  MdOutlineSettings,
+} from "react-icons/md";
+import { RiBookletLine } from "react-icons/ri";
 import { LiaUserTieSolid } from "react-icons/lia";
 import { CiCoinInsert } from "react-icons/ci";
 
@@ -47,18 +48,24 @@ const items = [
     link: "/dashboard/barber",
   },
   {
+    key: "applications",
+    label: "Applications",
+    icon: <IoMdCut />,
+    link: "/dashboard/applications",
+  },
+  {
     key: "history",
     label: "History",
     icon: <RiBookletLine />,
     link: "/dashboard/bookingHistory",
   },
-    {
+  {
     key: "schedual",
     label: "Schedule Management",
     icon: <CiCoinInsert />,
     link: "/dashboard/schedualManagement",
   },
-   {
+  {
     key: "schedualDate",
     label: "Upcoming Dates",
     icon: <CiCoinInsert />,
@@ -76,7 +83,7 @@ const items = [
     icon: <CiCoinInsert />,
     link: "/dashboard/transaction",
   },
-   {
+  {
     key: "profile",
     label: "Profile",
     icon: <MdOutlineSettings />,
@@ -115,7 +122,7 @@ const items = [
   //       label: "FAQ",
   //       link: "/dashboard/Settings/FAQ",
   //     },
-      
+
   //   ],
   // },
 ];
@@ -148,7 +155,7 @@ const SidBar = () => {
         activeParent.children
           ? activeParent.children.find((child) => child.link === currentPath)
               ?.key || activeParent.key
-          : activeParent.key
+          : activeParent.key,
       );
 
       if (activeParent.children && !expandedKeys.includes(activeParent.key)) {
@@ -159,7 +166,7 @@ const SidBar = () => {
 
   const onParentClick = (key) => {
     setExpandedKeys((prev) =>
-      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
+      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key],
     );
   };
 
@@ -170,14 +177,13 @@ const SidBar = () => {
   };
 
   return (
-    <div className="custom-sidebar h-[100vh] bg-[#AB684D]">
-      
+    <div className="custom-sidebar h-screen bg-[#AB684D]">
       <div className="custom-sidebar-logo flex justify-center">
         <div>
-        <div className="flex justify-center">
-        <img src={logo} alt="Logo" className="w-[40px]" />
-        </div>
-        <h1 className="text-white italic">Barber Time</h1>
+          <div className="flex justify-center">
+            <img src={logo} alt="Logo" className="w-10" />
+          </div>
+          <h1 className="text-white italic">Barber Time</h1>
         </div>
       </div>
       <div className="menu-items">
@@ -199,14 +205,17 @@ const SidBar = () => {
               <Link
                 to={item.link}
                 className={`menu-item my-4 mx-3 py-2 px-3 flex items-center cursor-pointer ${
-                  selectedKey === item.key || isSettingsActive || isCreatorActive || isCategoriesActive
+                  selectedKey === item.key ||
+                  isSettingsActive ||
+                  isCreatorActive ||
+                  isCategoriesActive
                     ? "bg-[#D17C51] text-[white] rounded-tr-md rounded-br-md"
                     : "bg-white text-[#AB684D] rounded-tr-md rounded-br-md hover:bg-gray-200"
                 }`}
                 onClick={(e) => {
                   if (item.children) {
-                    e.preventDefault(); 
-                    onParentClick(item.key); 
+                    e.preventDefault();
+                    onParentClick(item.key);
                   } else {
                     setSelectedKey(item.key);
                   }

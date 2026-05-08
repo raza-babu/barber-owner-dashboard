@@ -29,16 +29,17 @@ import { SocketProvider } from "../context/ContextProvider";
 import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 import Schedule from "../page/schedule/Schedule";
 import ScheduleDetails from "../page/schedule/ScheduleDetails";
-
-
+import Application from "../page/application/Application";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: (
-     
-        <ProtectedRoute><SocketProvider><DashboardLayout></DashboardLayout></SocketProvider></ProtectedRoute>
-      
+      <ProtectedRoute>
+        <SocketProvider>
+          <DashboardLayout></DashboardLayout>
+        </SocketProvider>
+      </ProtectedRoute>
     ),
     children: [
       {
@@ -47,64 +48,68 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/barberOwner",
-        element: <BarberOwner></BarberOwner>
+        element: <BarberOwner></BarberOwner>,
       },
       {
         path: "/dashboard/allShop",
-        element: <AllShopRegistration></AllShopRegistration>
+        element: <AllShopRegistration></AllShopRegistration>,
       },
       {
         path: "/dashboard/barberOwner/barberDetails",
-        element: <BarberOwnerDetails></BarberOwnerDetails>
+        element: <BarberOwnerDetails></BarberOwnerDetails>,
       },
       {
         path: "/dashboard/customer",
-        element: <Customer></Customer>
+        element: <Customer></Customer>,
       },
       {
         path: "/dashboard/userReport",
-        element: <UserReport></UserReport>
+        element: <UserReport></UserReport>,
       },
 
       {
         path: "/dashboard/barber",
-        element: <Barber></Barber>
+        element: <Barber></Barber>,
+      },
+      {
+        path: "/dashboard/applications",
+        element: <Application />,
       },
       {
         path: "/dashboard/bookingHistory",
-        element: <BookHistory></BookHistory>
+        element: <BookHistory></BookHistory>,
       },
       {
         path: "/dashboard/bookingHistory/chat/:id",
-        element: <ChatBox></ChatBox>
+        element: <ChatBox></ChatBox>,
       },
       {
         path: "/dashboard/services",
-        element: <Services></Services>
+        element: <Services></Services>,
       },
       {
         path: "/dashboard/schedualManagement",
-        element: <ShedualManagement></ShedualManagement>
+        element: <ShedualManagement></ShedualManagement>,
       },
       {
         path: "/dashboard/schedualDate/schedulaeDateDetails/:id",
-        element: <ScheduleDetails></ScheduleDetails>
+        element: <ScheduleDetails></ScheduleDetails>,
       },
       {
         path: "/dashboard/schedualDate",
-        element: <Schedule></Schedule>
+        element: <Schedule></Schedule>,
       },
-       {
+      {
         path: "/dashboard/schedualManagement/bookingManagement/:id",
-        element: <BookingManagement></BookingManagement>
+        element: <BookingManagement></BookingManagement>,
       },
       {
         path: "/dashboard/transaction",
-        element: <Transaction></Transaction>
+        element: <Transaction></Transaction>,
       },
       {
         path: "/dashboard/barber/barberDetails/:id",
-        element: <BarberDetailsPage></BarberDetailsPage>
+        element: <BarberDetailsPage></BarberDetailsPage>,
       },
 
       {
