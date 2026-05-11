@@ -74,7 +74,7 @@ const items = [
   },
   {
     key: "service",
-    label: "service",
+    label: "Services",
     icon: <LiaUserTieSolid />,
     link: "/dashboard/services",
   },

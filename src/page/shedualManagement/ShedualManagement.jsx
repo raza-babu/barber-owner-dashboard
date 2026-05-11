@@ -38,7 +38,7 @@ const ShedualManagement = () => {
 
   const columns = [
     {
-      title: "SI No",
+      title: "SL No",
       dataIndex: "key",
       render: (_, __, index) => Number(index + 1) + (meta?.page - 1) * pageSize,
     },

@@ -185,13 +185,15 @@ const businessApi = baseApi.injectEndpoints({
     }),
 
     getSingleSheduale: builder.query({
-      query: ({ id }) => {
+      query: (id) => {
         return {
           url: `/barber-schedules/${id}`,
           method: "GET",
         };
       },
-      providesTags: ["updateProfile"],
+      providesTags: (result, error, id) => [
+        { type: TagTypes.singleSchedule, id },
+      ],
     }),
 
     getDatebarber: builder.query({

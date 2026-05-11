@@ -1,9 +1,6 @@
-import React, { useState } from "react";
-import { Table, Dropdown } from "antd";
-import { EditOutlined } from "@ant-design/icons";
-import { RxCrossCircled } from "react-icons/rx";
+import { useState } from "react";
+import { Table } from "antd";
 import { Navigate } from "../../Navigate";
-import { IoIosArrowDown } from "react-icons/io";
 import ManageBarber from "./ManageBarber";
 import AddBooking from "./AddBooking";
 import { useGetSingleShedualeQuery } from "../redux/api/manageApi";
@@ -11,28 +8,24 @@ import { useParams } from "react-router-dom";
 
 const BookingManagement = () => {
   const { id } = useParams();
-  const { data: singleShaduale, isLoading } = useGetSingleShedualeQuery({ id });
+  const { data: singleShaduale, isLoading } = useGetSingleShedualeQuery(id);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState("personal");
-
-  const items = [
-    { label: <button>Barber</button>, key: "0" },
-    { label: <button>Customer</button>, key: "1" },
-  ];
-
 
   const dataSource =
     singleShaduale?.data?.map((item, index) => ({
       key: index + 1,
       dayName: item.dayName,
       time: item.time,
+      type: item.type,
       isActive: item.isActive ? "Open" : "Closed",
     })) || [];
 
   const columns = [
-    { title: "#", dataIndex: "key", key: "key" },
+    { title: "SL No", dataIndex: "key", key: "key" },
     { title: "Day", dataIndex: "dayName", key: "dayName" },
     { title: "Working Hours", dataIndex: "time", key: "time" },
+    { title: "Type", dataIndex: "type", key: "type" },
     {
       title: "Status",
       dataIndex: "isActive",
@@ -47,7 +40,6 @@ const BookingManagement = () => {
         </span>
       ),
     },
-
   ];
 
   return (
@@ -56,11 +48,8 @@ const BookingManagement = () => {
         <Navigate title={"Schedule Management"} />
       </div>
 
-   
-
       {selectedTab === "personal" && (
         <div>
-         
           <Table
             dataSource={dataSource}
             columns={columns}

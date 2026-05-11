@@ -8,7 +8,8 @@ const TagTypes = {
   scheduleDate: "ScheduleDate",
   servicesOwner: "ServicesOwner",
   transactions: "Transactions",
-  applications: "Applications"
+  applications: "Applications",
+  singleSchedule: "SingleSchedule",
 };
 
 export default TagTypes;
