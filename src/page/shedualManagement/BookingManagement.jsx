@@ -5,6 +5,7 @@ import ManageBarber from "./ManageBarber";
 import AddBooking from "./AddBooking";
 import { useGetSingleShedualeQuery } from "../redux/api/manageApi";
 import { useParams } from "react-router-dom";
+import ChangeTypeModal from "../../components/modal/ChangeTypeModal";
 
 const BookingManagement = () => {
   const { id } = useParams();
@@ -15,6 +16,7 @@ const BookingManagement = () => {
   const dataSource =
     singleShaduale?.data?.map((item, index) => ({
       key: index + 1,
+      id: item.id,
       dayName: item.dayName,
       time: item.time,
       type: item.type,
@@ -23,9 +25,23 @@ const BookingManagement = () => {
 
   const columns = [
     { title: "SL No", dataIndex: "key", key: "key" },
-    { title: "Day", dataIndex: "dayName", key: "dayName" },
+    {
+      title: "Day",
+      dataIndex: "dayName",
+      key: "dayName",
+      render: (day) => <span className="capitalize">{day}</span>,
+    },
     { title: "Working Hours", dataIndex: "time", key: "time" },
-    { title: "Type", dataIndex: "type", key: "type" },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+      render: (type, record) => (
+        <div className="flex gap-2">
+          <ChangeTypeModal type={type} scheduleId={record.id} />
+        </div>
+      ),
+    },
     {
       title: "Status",
       dataIndex: "isActive",

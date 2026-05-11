@@ -196,6 +196,19 @@ const businessApi = baseApi.injectEndpoints({
       ],
     }),
 
+    updateType: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/barber-schedules/${id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: (result, error, { id }) => [
+        { type: TagTypes.singleSchedule, id },
+      ],
+    }),
+
     getDatebarber: builder.query({
       query: ({ adminId, barberId, date }) => {
         return {
@@ -710,4 +723,5 @@ export const {
   useGetDatebarberQuery,
   useAddQueueMutation,
   useGetAllServicesOwnerSelectQuery,
+  useUpdateTypeMutation,
 } = businessApi;
