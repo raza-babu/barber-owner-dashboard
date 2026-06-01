@@ -26,7 +26,6 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
     });
   const [addBarberManagement] = useAddBarberManagementMutation();
 
-  console.log(schedualeBarber);
 
   const handleCancel = () => {
     form.resetFields();

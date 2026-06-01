@@ -3,7 +3,6 @@ import { baseApi } from "./baseApi";
 
 const businessApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // new
     getDasboard: builder.query({
       query: () => {
         return {
@@ -11,7 +10,7 @@ const businessApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["updateProfile"],
+      providesTags: [TagTypes.dashboard],
     }),
 
     getAllCustomerOwner: builder.query({

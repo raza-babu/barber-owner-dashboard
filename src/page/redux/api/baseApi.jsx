@@ -17,9 +17,10 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: async (args, api, extraOptions) => {
     const result = await baseQuery(args, api, extraOptions);
+    console.log(result?.error?.status)
     if (result?.error?.status === 401 || result?.error?.status === 403) {
       localStorage.clear();
-      message.error("Session Expired");
+      message.error("Session Expired or You have no subscription");
       window.location.href = "/login";
     }
     return result;
