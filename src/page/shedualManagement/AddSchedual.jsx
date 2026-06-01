@@ -1,8 +1,11 @@
 import { Form, Modal, Select, TimePicker, Switch, message } from "antd";
 import dayjs from "dayjs";
-import { useAddBarberManagementMutation, useGetAllShedualeBarberSelectQuery } from "../redux/api/manageApi";
+import {
+  useAddBarberManagementMutation,
+  useGetAllShedualeBarberSelectQuery,
+} from "../redux/api/manageApi";
 
-const format = "hh:mm A"; 
+const format = "hh:mm A";
 
 const weekDays = [
   "sunday",
@@ -16,12 +19,14 @@ const weekDays = [
 
 const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
   const [form] = Form.useForm();
-  const { data: schedualeBarber, isLoading } = useGetAllShedualeBarberSelectQuery({
-    
-     page: 1,
-    limit: 100000,
-  });
+  const { data: schedualeBarber, isLoading } =
+    useGetAllShedualeBarberSelectQuery({
+      page: 1,
+      limit: 100000,
+    });
   const [addBarberManagement] = useAddBarberManagementMutation();
+
+  console.log(schedualeBarber);
 
   const handleCancel = () => {
     form.resetFields();
@@ -29,7 +34,6 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
   };
 
   const handleSubmit = async (values) => {
-
     // map schedule data
     const schedules = weekDays.map((day) => {
       const timeRange = values[day]; // [start, end]
@@ -37,7 +41,7 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
         dayName: day,
         time: timeRange
           ? `${dayjs(timeRange[0]).format(format)} - ${dayjs(
-              timeRange[1]
+              timeRange[1],
             ).format(format)}`
           : "",
         isActive: values[`${day}_isActive`] ?? false,
@@ -45,12 +49,10 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
     });
 
     const data = {
-
       barberId: values.barberId,
       schedules,
-      type:values?.type
+      type: values?.type,
     };
-
 
     try {
       const response = await addBarberManagement(data).unwrap();
@@ -71,9 +73,7 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
       width={500}
     >
       <div className="mb-6 mt-2">
-        <h2 className="text-center font-semibold text-xl mb-4">
-          New Schedule
-        </h2>
+        <h2 className="text-center font-semibold text-xl mb-4">New Schedule</h2>
 
         <Form
           form={form}

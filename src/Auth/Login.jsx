@@ -4,8 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLoginAdminMutation } from "../page/redux/api/userApi";
 import { setToken } from "../page/redux/features/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { ImSpinner3 } from "react-icons/im";
+
 const Login = () => {
-  const [loginAdmin] = useLoginAdminMutation();
+  const [loginAdmin, { isLoading }] = useLoginAdminMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -17,7 +19,7 @@ const Login = () => {
         message.success(payload?.message);
         navigate("/");
       } else {
-        message.error("User Not Found");
+        message.error("You are not a Saloon Owner !");
       }
     } catch (error) {
       message.error(error?.data?.message || "Something went wrong. Try again!");
@@ -97,20 +99,27 @@ const Login = () => {
               <Form.Item>
                 <button
                   type="submit"
-                  className="w-full mt-8 py-2 bg-[#D17C51] text-white rounded hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
+                  className="w-full flex items-center gap-2 justify-center mt-8 py-2 bg-[#D17C51] text-white rounded hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
                 >
-                  Submit
+                 {isLoading ? (
+                  <>
+                    <ImSpinner3 siz={16} className="animate-spin"/>
+                    Processing...
+                  </>
+                 ): (
+                  <>Submit</>
+                 )}
                 </button>
               </Form.Item>
             </Form>
           </div>
         </div>
       </div>
-   <div className="hidden lg:block">
+     <div className="hidden lg:block">
        <div className="flex justify-center items-center">
         <img className="h-screen w-full" src={img} alt="" />
       </div>
-   </div>
+     </div>
     </div>
   );
 };
