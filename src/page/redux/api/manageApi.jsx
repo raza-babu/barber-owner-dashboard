@@ -203,9 +203,10 @@ const businessApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: (result, error, { id }) => [
-        { type: TagTypes.singleSchedule, id },
-      ],
+      invalidatesTags: [TagTypes.singleSchedule]
+      // invalidatesTags: (result, error, { id }) => [
+      //   { type: TagTypes.singleSchedule, id },
+      // ],
     }),
 
     getDatebarber: builder.query({

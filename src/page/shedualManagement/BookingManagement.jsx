@@ -9,7 +9,7 @@ import ChangeTypeModal from "../../components/modal/ChangeTypeModal";
 
 const BookingManagement = () => {
   const { id } = useParams();
-  const { data: singleShaduale, isLoading } = useGetSingleShedualeQuery(id);
+  const { data: singleShaduale, isLoading, isFetching } = useGetSingleShedualeQuery(id);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState("personal");
 
@@ -69,7 +69,7 @@ const BookingManagement = () => {
           <Table
             dataSource={dataSource}
             columns={columns}
-            loading={isLoading}
+            loading={isLoading || isFetching}
             pagination={false}
             scroll={{ x: 800 }}
           />
