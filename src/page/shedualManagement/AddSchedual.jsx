@@ -4,6 +4,7 @@ import {
   useAddBarberManagementMutation,
   useGetAllShedualeBarberSelectQuery,
 } from "../redux/api/manageApi";
+import { ImSpinner3 } from "react-icons/im";
 
 const format = "hh:mm A";
 
@@ -24,7 +25,7 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
       page: 1,
       limit: 100000,
     });
-  const [addBarberManagement] = useAddBarberManagementMutation();
+  const [addBarberManagement, { isLoading: addLoading }] = useAddBarberManagementMutation();
 
 
   const handleCancel = () => {
@@ -40,8 +41,8 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
         dayName: day,
         time: timeRange
           ? `${dayjs(timeRange[0]).format(format)} - ${dayjs(
-              timeRange[1],
-            ).format(format)}`
+            timeRange[1],
+          ).format(format)}`
           : "",
         isActive: values[`${day}_isActive`] ?? false,
       };
@@ -52,6 +53,8 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
       schedules,
       type: values?.type,
     };
+
+    console.log(data)
 
     try {
       const response = await addBarberManagement(data).unwrap();
@@ -119,6 +122,7 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
                 label={day.charAt(0).toUpperCase() + day.slice(1)}
                 name={day}
                 className="mb-0"
+                rules={[{ required: true, message: `Please select time for ${day.charAt(0).toUpperCase() + day.slice(1)}` }]}
               >
                 <TimePicker.RangePicker
                   format={format}
@@ -139,9 +143,16 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
 
           <button
             type="submit"
-            className="w-full py-2 mt-2 bg-[#D17C51] text-white rounded-md"
+            className="w-full flex items-center gap-2 justify-center mt-8 py-2 bg-[#D17C51] text-white rounded hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
           >
-            Confirm
+            {addLoading ? (
+              <>
+                <ImSpinner3 siz={16} className="animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>Confirm</>
+            )}
           </button>
         </Form>
       </div>

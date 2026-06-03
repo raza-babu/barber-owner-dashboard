@@ -10,7 +10,8 @@ const TagTypes = {
   transactions: "Transactions",
   applications: "Applications",
   singleSchedule: "SingleSchedule",
-  dashboard: "Dashboard"
+  dashboard: "Dashboard",
+  remainingBarbers: "RemainingBarbers"
 };
 
 export default TagTypes;
