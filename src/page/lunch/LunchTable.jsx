@@ -2,7 +2,7 @@ import { Table } from "antd";
 import EditLunchModal from "../../components/modal/EditLunchModal";
 import DeleteLunchModal from "../../components/modal/DeleteLunchModal";
 
-const LunchTable = ({ lunchSchedules }) => {
+const LunchTable = ({ lunchSchedules, loading }) => {
 
     // Columns for the table
     const columns = [
@@ -16,7 +16,7 @@ const LunchTable = ({ lunchSchedules }) => {
             title: 'Date',
             dataIndex: 'startedAt',
             key: 'date',
-            render: (date)=> <span>{date?.split('T')[0]}</span>
+            render: (date) => <span>{date?.split('T')[0]}</span>
         },
         {
             title: 'Start Time',
@@ -33,7 +33,7 @@ const LunchTable = ({ lunchSchedules }) => {
             key: 'action',
             render: (_, record) => (
                 <div className="flex gap-2">
-                    <EditLunchModal />
+                    <EditLunchModal record={record} />
                     <DeleteLunchModal lunchId={record.id} />
                 </div>
             ),
@@ -49,6 +49,7 @@ const LunchTable = ({ lunchSchedules }) => {
                 dataSource={lunchSchedules}
                 rowKey="id"
                 pagination={false}
+                loading={loading}
             />
         </>
     )

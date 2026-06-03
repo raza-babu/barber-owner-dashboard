@@ -8,11 +8,7 @@ import { useGetLunchSchedulesQuery } from '../redux/api/manageApi';
 dayjs.extend(customParseFormat);
 
 const Lunch = () => {
-    //   const [data, setData] = useState([
-    //     { id: 1, date: '2026-06-03', startTime: '01:00 PM', endTime: '02:00 PM' }
-    //   ]);
-
-    const { data, isLoading } = useGetLunchSchedulesQuery(undefined);
+    const { data, isLoading, isFetching } = useGetLunchSchedulesQuery(undefined);
     const lunchSchedules = data?.data || [];
 
 
@@ -23,7 +19,10 @@ const Lunch = () => {
                 <Navigate title="Lunch Time" />
                 <AddLunchModal />
             </div>
-            <LunchTable lunchSchedules={lunchSchedules} />
+            <LunchTable
+                lunchSchedules={lunchSchedules}
+                loading={isLoading || isFetching}
+            />
         </div>
     );
 };

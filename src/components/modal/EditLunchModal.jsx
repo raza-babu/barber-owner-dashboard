@@ -1,21 +1,40 @@
-import { Button, Form, Modal, TimePicker } from "antd"
+import { Button, Form, Modal, TimePicker, message } from "antd"
 import { EditOutlined } from '@ant-design/icons';
 import { useState } from "react";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { useUpdateLunchMutation } from "../../page/redux/api/manageApi";
+import { ImSpinner3 } from "react-icons/im";
 
 
-const EditLunchModal = () => {
+dayjs.extend(customParseFormat);
+
+const EditLunchModal = ({ record }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [form] = Form.useForm();
+    const { id, startTime, endTime } = record || {};
+    const [updateLunch, { isLoading }] = useUpdateLunchMutation();
 
-    const handleSubmit = (values) => {
+    const handleSubmit = async (values) => {
         const payload = {
-            id: Date.now(),
-            date: dayjs().format('YYYY-MM-DD'), // Default to today since it's not in the form
             startTime: values.startTime ? values.startTime.format('hh:mm A') : null,
             endTime: values.endTime ? values.endTime.format('hh:mm A') : null,
         };
-        message.success('Lunch time added successfully!');
+
+        try {
+            await updateLunch({
+                lunchId: id,
+                data: payload
+            }).unwrap();
+            message.success('Lunch time updated successfully!');
+            setModalOpen(false);
+            form.resetFields();
+        } catch (error) {
+            message.error(error?.data?.message || "Something went wrong");
+        }
     };
+
+
 
     return (
         <>
@@ -23,7 +42,13 @@ const EditLunchModal = () => {
             <Button
                 type="text"
                 icon={<EditOutlined className="text-blue-500" />}
-                onClick={() => setModalOpen(true)}
+                onClick={() => {
+                    form.setFieldsValue({
+                        startTime: startTime ? dayjs(startTime, 'hh:mm A') : null,
+                        endTime: endTime ? dayjs(endTime, 'hh:mm A') : null,
+                    });
+                    setModalOpen(true);
+                }}
             />
 
             <Modal
@@ -44,18 +69,42 @@ const EditLunchModal = () => {
                     <Form.Item
                         label="End Time"
                         name="endTime"
-                        rules={[{ required: true, message: 'Please select an end time!' }]}
+                        rules={[
+                            { required: true, message: 'Please select an end time!' },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (!value || !getFieldValue('startTime')) {
+                                        return Promise.resolve();
+                                    }
+                                    if (value.isSame(getFieldValue('startTime'))) {
+                                        return Promise.reject(new Error('End time cannot be the same as start time!'));
+                                    }
+                                    if (value.isBefore(getFieldValue('startTime'))) {
+                                        return Promise.reject(new Error('End time must be greater than start time!'));
+                                    }
+                                    return Promise.resolve();
+                                },
+                            }),
+                        ]}
                     >
                         <TimePicker use12Hours format="hh:mm A" className="w-full" />
                     </Form.Item>
 
                     <Form.Item className="mb-0 text-right">
-                        <Button onClick={() => setModalOpen(false)} className="mr-2">
-                            Cancel
-                        </Button>
-                        <Button type="primary" htmlType="submit" className="bg-[#D17C51] text-white hover:bg-[#D17C51]/90">
-                            Update
-                        </Button>
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full flex items-center gap-2 justify-center mt-4 py-2 bg-[#D17C51] cursor-pointer text-white rounded hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 disabled:cursor-not-allowed"
+                        >
+                            {isLoading ? (
+                                <>
+                                    <ImSpinner3 siz={16} className="animate-spin" />
+                                    Processing...
+                                </>
+                            ) : (
+                                <>Save Changes</>
+                            )}
+                        </button>
                     </Form.Item>
                 </Form>
             </Modal>

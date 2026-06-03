@@ -667,6 +667,35 @@ const businessApi = baseApi.injectEndpoints({
       },
       providesTags: [TagTypes.lunchSchedules],
     }),
+    addLunch: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/lunch-times`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: [TagTypes.lunchSchedules],
+    }),
+    deleteLunch: builder.mutation({
+      query: (lunchId) => {
+        return {
+          url: `/lunch-times/${lunchId}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: [TagTypes.lunchSchedules],
+    }),
+    updateLunch: builder.mutation({
+      query: ({ lunchId, data}) => {
+        return {
+          url: `/lunch-times/${lunchId}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: [TagTypes.lunchSchedules],
+    }),
   }),
 });
 
@@ -733,5 +762,8 @@ export const {
   useAddQueueMutation,
   useGetAllServicesOwnerSelectQuery,
   useUpdateTypeMutation,
-  useGetLunchSchedulesQuery
+  useGetLunchSchedulesQuery,
+  useAddLunchMutation,
+  useDeleteLunchMutation,
+  useUpdateLunchMutation
 } = businessApi;

@@ -1,22 +1,23 @@
 import { Button, Modal } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { DeleteOutlined } from "@ant-design/icons";
-//import { useDeleteSlotMutation } from "../../../redux/features/slot/slotApi";
+import { useDeleteLunchMutation } from "../../page/redux/api/manageApi";
 
 const DeleteLunchModal = ({ lunchId }) => {
     const [modalOpen, setModalOpen] = useState(false);
-    const isLoading = false;
-    //const [deleteSlot, { isLoading, isSuccess, isError }] = useDeleteSlotMutation();
+    const [deleteLunch, { isLoading }] = useDeleteLunchMutation();
 
-    // useEffect(() => {
-    //     if (isSuccess || isError) {
-    //         setModalOpen(false)
-    //     }
-    // }, [isSuccess, isError])
-
-    const handleDelete = () => {
-        // deleteSlot(lunchId);
+    const handleDelete = async () => {
+        try {
+            await deleteLunch(lunchId).unwrap();
+            message.success('Lunch time deleted successfully!');
+            setModalOpen(false);
+            form.resetFields();
+        } catch (error) {
+            message.error(error?.data?.message || "Something went wrong");
+            setModalOpen(false)
+        }
     }
 
     return (

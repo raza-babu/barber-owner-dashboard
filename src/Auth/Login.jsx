@@ -99,27 +99,28 @@ const Login = () => {
               <Form.Item>
                 <button
                   type="submit"
-                  className="w-full flex items-center gap-2 justify-center mt-8 py-2 bg-[#D17C51] text-white rounded hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
+                  disabled={isLoading}
+                  className="w-full flex items-center gap-2 justify-center mt-8 py-2 bg-[#D17C51] cursor-pointer text-white rounded hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 disabled:cursor-not-allowed"
                 >
-                 {isLoading ? (
-                  <>
-                    <ImSpinner3 siz={16} className="animate-spin"/>
-                    Processing...
-                  </>
-                 ): (
-                  <>Submit</>
-                 )}
+                  {isLoading ? (
+                    <>
+                      <ImSpinner3 siz={16} className="animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>Submit</>
+                  )}
                 </button>
               </Form.Item>
             </Form>
           </div>
         </div>
       </div>
-     <div className="hidden lg:block">
-       <div className="flex justify-center items-center">
-        <img className="h-screen w-full" src={img} alt="" />
+      <div className="hidden lg:block">
+        <div className="flex justify-center items-center">
+          <img className="h-screen w-full" src={img} alt="" />
+        </div>
       </div>
-     </div>
     </div>
   );
 };
