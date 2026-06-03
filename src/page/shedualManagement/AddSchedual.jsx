@@ -45,6 +45,7 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
           ).format(format)}`
           : "",
         isActive: values[`${day}_isActive`] ?? false,
+        type: values?.type
       };
     });
 
@@ -54,7 +55,6 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
       type: values?.type,
     };
 
-    console.log(data)
 
     try {
       const response = await addBarberManagement(data).unwrap();
@@ -143,7 +143,7 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
 
           <button
             type="submit"
-            className="w-full flex items-center gap-2 justify-center mt-8 py-2 bg-[#D17C51] text-white rounded hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
+            className="w-full flex items-center gap-2 justify-center cursor-pointer mt-8 py-2 bg-[#D17C51] text-white rounded hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
           >
             {addLoading ? (
               <>
