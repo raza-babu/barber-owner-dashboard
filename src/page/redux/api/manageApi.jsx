@@ -658,6 +658,15 @@ const businessApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
+    getLunchSchedules: builder.query({
+      query: () => {
+        return {
+          url: `/lunch-times`,
+          method: "GET",
+        };
+      },
+      providesTags: [TagTypes.lunchSchedules],
+    }),
   }),
 });
 
@@ -724,4 +733,5 @@ export const {
   useAddQueueMutation,
   useGetAllServicesOwnerSelectQuery,
   useUpdateTypeMutation,
+  useGetLunchSchedulesQuery
 } = businessApi;

@@ -30,6 +30,7 @@ import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 import Schedule from "../page/schedule/Schedule";
 import ScheduleDetails from "../page/schedule/ScheduleDetails";
 import Application from "../page/application/Application";
+import Lunch from "../page/lunch/Lunch";
 
 export const router = createBrowserRouter([
   {
@@ -125,6 +126,10 @@ export const router = createBrowserRouter([
         element: <Profile></Profile>,
       },
       {
+        path: "/dashboard/Settings/lunch",
+        element: <Lunch></Lunch>,
+      },
+      {
         path: "/dashboard/Settings/notification",
         element: <Notification></Notification>,
       },
@@ -143,7 +148,7 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/Settings/PrivacyPolicy",
         element: <PrivacyPolicy></PrivacyPolicy>,
-      },
+      }
     ],
   },
 

@@ -90,6 +90,12 @@ const items = [
     icon: <MdOutlineSettings />,
     link: "/dashboard/Settings/profile",
   },
+  {
+    key: "lunch",
+    label: "Lunch Time",
+    icon: <MdOutlineSettings />,
+    link: "/dashboard/Settings/lunch",
+  },
 
   // {
   //   key: "support",
