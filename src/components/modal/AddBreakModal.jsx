@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAddBreakMutation, useGetAllBarberOwnerQuery } from "../../page/redux/api/manageApi";
 import { ImSpinner3 } from "react-icons/im";
 import useDebounce from "../../hooks/useDebounce";
+import dayjs from "dayjs";
 
 const AddBreakModal = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,7 +59,7 @@ const AddBreakModal = () => {
             />
           </Form.Item>
           <Form.Item label="Date" name="date" rules={[{ required: true, message: 'Please select a date!' }]}>
-            <DatePicker format="YYYY-MM-DD" className="w-full" />
+            <DatePicker format="YYYY-MM-DD" className="w-full" disabledDate={(current) => current && current < dayjs().startOf('day')} />
           </Form.Item>
           <Form.Item label="Start Time" name="startTime" rules={[{ required: true, message: 'Please select a start time!' }]}>
             <TimePicker use12Hours format="hh:mm A" className="w-full" />
