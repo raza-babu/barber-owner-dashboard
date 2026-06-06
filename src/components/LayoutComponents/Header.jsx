@@ -5,7 +5,6 @@ import { FaBars } from "react-icons/fa";
 import { useRef, useState } from "react";
 import { Drawer, Radio, Space } from "antd";
 import logo from "../../assets/logo.png";
-
 import { FaChevronRight } from "react-icons/fa";
 import { IoIosLogIn, IoMdCut } from "react-icons/io";
 import { TbUserCircle } from "react-icons/tb";
@@ -295,10 +294,10 @@ const Header = () => {
                   alt="profile"
                 />
               </div>
-              <div className="text-end">
+              {/* <div className="text-end">
                 <h3>{profileData?.data?.fullName || "Admin"}</h3>
                 <h4 className="text-sm">Admin</h4>
-              </div>
+              </div> */}
             </div>
           </Link>
         </div>

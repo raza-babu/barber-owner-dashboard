@@ -2,6 +2,7 @@ import React from 'react';
 import { Table } from 'antd';
 import EditBreakModal from '../../components/modal/EditBreakModal';
 import DeleteBreakModal from '../../components/modal/DeleteBreakModal';
+import profile_placeholder from "../../assets/profile_placeholder.png";
 
 const BreakTimeTable = ({ breakTimes, loading }) => {
   const columns = [
@@ -18,9 +19,13 @@ const BreakTimeTable = ({ breakTimes, loading }) => {
         <div className="flex items-center gap-2">
           {record.barberImage ? (
             <img
-              src={record.barberImage}
+              src={record.barberImage || profile_placeholder}
               alt="Barber"
               style={{ width: 40, height: 40, borderRadius: '50%' }}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = profile_placeholder;
+              }}
             />
           ) : null}
           <span>{record.barberName}</span>
@@ -39,7 +44,7 @@ const BreakTimeTable = ({ breakTimes, loading }) => {
     },
     {
       title: 'Date',
-      dataIndex: 'startedAt',
+      dataIndex: 'lunchStart',
       key: 'date',
       render: (date) => <span>{date?.split('T')[0]}</span>,
     },
@@ -69,7 +74,7 @@ const BreakTimeTable = ({ breakTimes, loading }) => {
     <Table
       columns={columns}
       dataSource={breakTimes}
-      rowKey="id"
+      rowKey="barberId"
       pagination={false}
       loading={loading}
     />

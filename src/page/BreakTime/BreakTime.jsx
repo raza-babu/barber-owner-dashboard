@@ -14,7 +14,7 @@ const BreakTime = () => {
   return (
     <div className="bg-white p-3 h-[87vh]">
       <div className="flex justify-between items-center mb-4">
-        <Navigate title="Break Times" />
+        <Navigate title="Lunch Times" />
         <AddBreakModal />
       </div>
       <BreakTimeTable breakTimes={breakTimes} loading={isLoading || isFetching} />

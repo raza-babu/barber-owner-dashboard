@@ -87,9 +87,15 @@ const businessApi = baseApi.injectEndpoints({
 
     getAllBarberOwner: builder.query({
       query: ({ page, limit, searchTerm }) => {
+        const params = new URLSearchParams();
+
+        if (page) params.append("page", page);
+        if (limit) params.append("limit", limit);
+        if (searchTerm) params.append("searchTerm", searchTerm);
         return {
-          url: `/saloons/barbers?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
+          url: `/saloons/barbers`,
           method: "GET",
+          params: params
         };
       },
       providesTags: [TagTypes.barberOwners],
@@ -687,7 +693,7 @@ const businessApi = baseApi.injectEndpoints({
       invalidatesTags: [TagTypes.lunchSchedules],
     }),
     updateLunch: builder.mutation({
-      query: ({ lunchId, data}) => {
+      query: ({ lunchId, data }) => {
         return {
           url: `/lunch-times/${lunchId}`,
           method: "PATCH",
@@ -699,7 +705,7 @@ const businessApi = baseApi.injectEndpoints({
     getBreakTimes: builder.query({
       query: () => {
         return {
-          url: `/lunch-times`,
+          url: `/break-times`,
           method: "GET",
         };
       },
@@ -708,7 +714,7 @@ const businessApi = baseApi.injectEndpoints({
     addBreak: builder.mutation({
       query: (data) => {
         return {
-          url: `/lunch-times`,
+          url: `/break-times`,
           method: "POST",
           body: data,
         };
@@ -718,16 +724,16 @@ const businessApi = baseApi.injectEndpoints({
     deleteBreak: builder.mutation({
       query: (lunchId) => {
         return {
-          url: `/lunch-times/${lunchId}`,
+          url: `/break-times/${lunchId}`,
           method: "DELETE",
         };
       },
       invalidatesTags: [TagTypes.breakTimes],
     }),
     updateBreak: builder.mutation({
-      query: ({ lunchId, data}) => {
+      query: ({ lunchId, data }) => {
         return {
-          url: `/lunch-times/${lunchId}`,
+          url: `/break-times/${lunchId}`,
           method: "PATCH",
           body: data,
         };
