@@ -13,6 +13,32 @@ const LunchTable = ({ lunchSchedules, loading }) => {
             render: (text, record, index) => index + 1,
         },
         {
+            title: 'Barber',
+            key: 'barber',
+            render: (_, record) => (
+                <div className="flex items-center gap-2">
+                    {record.barberImage ? (
+                        <img
+                            src={record.barberImage}
+                            alt="Barber"
+                            style={{ width: 40, height: 40, borderRadius: '50%' }}
+                        />
+                    ) : null}
+                    <span>{record.barberName}</span>
+                </div>
+            ),
+        },
+        {
+            title: 'Barber Email',
+            dataIndex: 'barberEmail',
+            key: 'barberEmail',
+        },
+        {
+            title: 'Barber Phone',
+            dataIndex: 'barberPhone',
+            key: 'barberPhone',
+        },
+        {
             title: 'Date',
             dataIndex: 'startedAt',
             key: 'date',
@@ -37,7 +63,7 @@ const LunchTable = ({ lunchSchedules, loading }) => {
                     <DeleteLunchModal lunchId={record.id} />
                 </div>
             ),
-        },
+        }
     ];
 
 

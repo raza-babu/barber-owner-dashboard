@@ -12,7 +12,8 @@ const TagTypes = {
   singleSchedule: "SingleSchedule",
   dashboard: "Dashboard",
   remainingBarbers: "RemainingBarbers",
-  lunchSchedules: "LunchSchedules"
+  lunchSchedules: "LunchSchedules",
+  breakTimes: "BreakTimes"
 };
 
 export default TagTypes;

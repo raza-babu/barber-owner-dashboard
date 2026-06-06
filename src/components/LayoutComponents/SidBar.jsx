@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { TbUserCircle } from "react-icons/tb";
 import {
+  MdLunchDining,
   MdOutlineSettings,
 } from "react-icons/md";
 import { RiBookletLine } from "react-icons/ri";
@@ -90,11 +91,17 @@ const items = [
     icon: <MdOutlineSettings />,
     link: "/dashboard/Settings/profile",
   },
+  // {
+  //   key: "lunch",
+  //   label: "Lunch Time",
+  //   icon: <MdLunchDining />,
+  //   link: "/dashboard/Settings/lunch",
+  // },
   {
     key: "lunch",
     label: "Lunch Time",
-    icon: <MdOutlineSettings />,
-    link: "/dashboard/Settings/lunch",
+    icon: <MdLunchDining />,
+    link: "/dashboard/Settings/breaks",
   },
 
   // {

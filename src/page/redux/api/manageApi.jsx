@@ -696,6 +696,44 @@ const businessApi = baseApi.injectEndpoints({
       },
       invalidatesTags: [TagTypes.lunchSchedules],
     }),
+    getBreakTimes: builder.query({
+      query: () => {
+        return {
+          url: `/lunch-times`,
+          method: "GET",
+        };
+      },
+      providesTags: [TagTypes.breakTimes],
+    }),
+    addBreak: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/lunch-times`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: [TagTypes.breakTimes],
+    }),
+    deleteBreak: builder.mutation({
+      query: (lunchId) => {
+        return {
+          url: `/lunch-times/${lunchId}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: [TagTypes.breakTimes],
+    }),
+    updateBreak: builder.mutation({
+      query: ({ lunchId, data}) => {
+        return {
+          url: `/lunch-times/${lunchId}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: [TagTypes.breakTimes],
+    }),
   }),
 });
 
@@ -765,5 +803,9 @@ export const {
   useGetLunchSchedulesQuery,
   useAddLunchMutation,
   useDeleteLunchMutation,
-  useUpdateLunchMutation
+  useUpdateLunchMutation,
+  useGetBreakTimesQuery,
+  useAddBreakMutation,
+  useDeleteBreakMutation,
+  useUpdateBreakMutation
 } = businessApi;
