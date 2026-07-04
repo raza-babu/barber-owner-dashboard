@@ -11,6 +11,7 @@ import { TbUserCircle } from "react-icons/tb";
 import {
   MdLunchDining,
   MdOutlineSettings,
+  MdOutlineCalendarToday,
 } from "react-icons/md";
 import { RiBookletLine } from "react-icons/ri";
 import { LiaUserTieSolid } from "react-icons/lia";
@@ -102,6 +103,12 @@ const items = [
     label: "Lunch Time",
     icon: <MdLunchDining />,
     link: "/dashboard/Settings/breaks",
+  },
+  {
+    key: "holidays",
+    label: "Holiday Management",
+    icon: <MdOutlineCalendarToday />,
+    link: "/dashboard/holidays",
   },
 
   // {

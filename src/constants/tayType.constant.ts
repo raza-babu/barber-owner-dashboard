@@ -13,7 +13,8 @@ const TagTypes = {
   dashboard: "Dashboard",
   remainingBarbers: "RemainingBarbers",
   lunchSchedules: "LunchSchedules",
-  breakTimes: "BreakTimes"
+  breakTimes: "BreakTimes",
+  holidays: "Holidays"
 };
 
 export default TagTypes;

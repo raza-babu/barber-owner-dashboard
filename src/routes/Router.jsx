@@ -32,6 +32,7 @@ import ScheduleDetails from "../page/schedule/ScheduleDetails";
 import Application from "../page/application/Application";
 import Lunch from "../page/lunch/Lunch";
 import BreakTime from "../page/BreakTime/BreakTime";
+import HolidayManagement from "../page/Holiday/HolidayManagement";
 
 export const router = createBrowserRouter([
   {
@@ -133,6 +134,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/Settings/breaks",
         element: <BreakTime></BreakTime>,
+      },
+      {
+        path: "/dashboard/holidays",
+        element: <HolidayManagement />,
       },
       {
         path: "/dashboard/Settings/notification",

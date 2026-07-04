@@ -3,7 +3,8 @@ import { message } from "antd";
 import TagTypes from "../../../constants/tayType.constant";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://backend.barberstime.com/api/v1",
+  // baseUrl: "https://backend.barberstime.com/api/v1",
+  baseUrl: "http://10.10.28.73:8080/api/v1",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().logInUser.token;
     if (token) {
