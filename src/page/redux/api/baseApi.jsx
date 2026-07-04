@@ -3,8 +3,8 @@ import { message } from "antd";
 import TagTypes from "../../../constants/tayType.constant";
 
 const baseQuery = fetchBaseQuery({
-  // baseUrl: "https://backend.barberstime.com/api/v1",
-  baseUrl: "http://10.10.28.73:8080/api/v1",
+  baseUrl: "https://backend.barberstime.com/api/v1",
+  // baseUrl: "http://10.10.28.73:8080/api/v1",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().logInUser.token;
     if (token) {
@@ -18,7 +18,7 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: async (args, api, extraOptions) => {
     const result = await baseQuery(args, api, extraOptions);
-    console.log(result?.error?.status)
+    console.log(result?.error?.status);
     if (result?.error?.status === 401 || result?.error?.status === 403) {
       localStorage.clear();
       message.error("Session Expired or You have no subscription");
