@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAddHolidayMutation } from "../../page/redux/api/holidayApi";
 import { useGetAllBarberOwnerQuery } from "../../page/redux/api/manageApi";
 import { ImSpinner3 } from "react-icons/im";
+import dayjs from "dayjs";
 
 const AddHolidayModal = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -102,7 +103,11 @@ const AddHolidayModal = () => {
             name="date"
             rules={[{ required: true, message: "Please select the holiday date!" }]}
           >
-            <DatePicker className="w-full" format="YYYY-MM-DD" />
+            <DatePicker
+              className="w-full"
+              format="YYYY-MM-DD"
+              disabledDate={(current) => current && current <= dayjs().endOf("day")}
+            />
           </Form.Item>
 
           <Form.Item

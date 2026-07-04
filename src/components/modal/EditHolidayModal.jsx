@@ -111,7 +111,11 @@ const EditHolidayModal = ({ record }) => {
             name="date"
             rules={[{ required: true, message: "Please select the holiday date!" }]}
           >
-            <DatePicker className="w-full" format="YYYY-MM-DD" />
+            <DatePicker
+              className="w-full"
+              format="YYYY-MM-DD"
+              disabledDate={(current) => current && current <= dayjs().endOf("day")}
+            />
           </Form.Item>
 
           <Form.Item
